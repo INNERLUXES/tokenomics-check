@@ -1,0 +1,2956 @@
+Source: https://docs.openzeppelin.com/contracts/5.x/api/token/erc20
+Fetched and converted to plain text for reading; the page itself is the authority.
+
+OpenZeppelin ContractsAPI ReferenceToken
+
+# ERC20
+
+Smart contract ERC20 utilities and implementations
+
+This set of interfaces, contracts, and utilities are all related to the ERC-20 Token Standard.
+
+For an overview of ERC-20 tokens and a walk through on how to create a token contract read our ERC-20 guide.
+
+There are a few core contracts that implement the behavior specified in the ERC-20 standard:
+
+- IERC20: the interface all ERC-20 implementations should conform to.
+
+- IERC20Metadata: the extended ERC-20 interface including the name, symbol and decimals functions.
+
+- ERC20: the implementation of the ERC-20 interface, including the name, symbol and decimals optional extensions to the standard interface.
+
+Additionally there are multiple custom extensions, including:
+
+- ERC20Permit: gasless approval of tokens (standardized as ERC-2612).
+
+- ERC20Bridgeable: compatibility with crosschain bridges through ERC-7802.
+
+- ERC20Burnable: destruction of own tokens.
+
+- ERC20Capped: enforcement of a cap to the total supply when minting tokens.
+
+- ERC20Crosschain: embedded BridgeFungible bridge, making the token crosschain through the use of ERC-7786 gateways.
+
+- ERC20Pausable: ability to pause token transfers.
+
+- ERC20FlashMint: token level support for flash loans through the minting and burning of ephemeral tokens (standardized as ERC-3156).
+
+- ERC20Votes: support for voting and vote delegation. See the governance guide for a minimal example (with the required overrides when combining ERC20 + ERC20Permit + ERC20Votes).
+
+- ERC20Wrapper: wrapper to create an ERC-20 backed by another ERC-20, with deposit and withdraw methods. Useful in conjunction with ERC20Votes.
+
+- ERC20TemporaryApproval: support for approvals lasting for only one transaction, as defined in ERC-7674.
+
+- ERC1363: support for calling the target of a transfer or approval, enabling code execution on the receiver within a single transaction.
+
+- ERC4626: tokenized vault that manages shares (represented as ERC-20) that are backed by assets (another ERC-20).
+
+Finally, there are some utilities to interact with ERC-20 contracts in various ways:
+
+- SafeERC20: a wrapper around the interface that eliminates the need to handle boolean return values.
+
+Other utilities that support ERC-20 assets can be found in the codebase:
+
+- ERC-20 tokens can be timelocked (held for a beneficiary until a specified time) or vested (released following a given schedule) using a VestingWallet.
+
+This core set of contracts is designed to be unopinionated, allowing developers to access the internal functions in ERC-20 (such as _mint) and expose them as external functions in the way they prefer.
+
+## Core
+
+IERC20
+
+IERC20Metadata
+
+ERC20
+
+## Extensions
+
+IERC20Permit
+
+ERC20Permit
+
+ERC20Bridgeable
+
+ERC20Burnable
+
+ERC20Capped
+
+ERC20Crosschain
+
+ERC20Pausable
+
+ERC20Votes
+
+ERC20Wrapper
+
+ERC20FlashMint
+
+ERC20TemporaryApproval
+
+ERC1363
+
+ERC4626
+
+## Utilities
+
+SafeERC20
+
+ERC1363Utils
+
+## ERC20
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+Implementation of the IERC20 interface.
+
+This implementation is agnostic to the way tokens are created. This means that a supply mechanism has to be added in a derived contract using ERC20._mint.
+
+For a detailed writeup see our guide How to implement supply mechanisms.
+
+The default value of ERC20.decimals is 18. To change this, you should override this function so it returns a different value.
+
+We have followed general OpenZeppelin Contracts guidelines: functions revert instead returning false on failure. This behavior is nonetheless conventional and does not conflict with the expectations of ERC-20 applications.
+
+### Functions
+
+- constructor(name_, symbol_)
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+constructor(string name_, string symbol_)
+
+internal
+
+#
+
+Sets the values for ERC20.name and ERC20.symbol.
+
+Both values are immutable: they can only be set once during construction.
+
+name() -> string
+
+public
+
+#
+
+Returns the name of the token.
+
+symbol() -> string
+
+public
+
+#
+
+Returns the symbol of the token, usually a shorter version of the name.
+
+decimals() -> uint8
+
+public
+
+#
+
+Returns the number of decimals used to get its user representation. For example, if decimals equals 2, a balance of 505 tokens should be displayed to a user as 5.05 (505 / 10 ** 2).
+
+Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the default value returned by this function, unless it's overridden.
+
+This information is only used for display purposes: it in no way affects any of the arithmetic of the contract, including IERC20.balanceOf and IERC20.transfer.
+
+totalSupply() -> uint256
+
+public
+
+#
+
+Returns the value of tokens in existence.
+
+balanceOf(address account) -> uint256
+
+public
+
+#
+
+Returns the value of tokens owned by account.
+
+transfer(address to, uint256 value) -> bool
+
+public
+
+#
+
+See IERC20.transfer.
+
+Requirements:
+
+- to cannot be the zero address.
+
+- the caller must have a balance of at least value.
+
+allowance(address owner, address spender) -> uint256
+
+public
+
+#
+
+Returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through ERC20.transferFrom. This is zero by default.
+
+This value changes when ERC20.approve or ERC20.transferFrom are called.
+
+approve(address spender, uint256 value) -> bool
+
+public
+
+#
+
+See IERC20.approve.
+
+If value is the maximum uint256, the allowance is not updated on transferFrom. This is semantically equivalent to an infinite approval.
+
+Requirements:
+
+- spender cannot be the zero address.
+
+transferFrom(address from, address to, uint256 value) -> bool
+
+public
+
+#
+
+See IERC20.transferFrom.
+
+Skips emitting an IERC20.Approval event indicating an allowance update. This is not required by the ERC. See _approve.
+
+Does not update the allowance if the current allowance is the maximum uint256.
+
+Requirements:
+
+- from and to cannot be the zero address.
+
+- from must have a balance of at least value.
+
+- the caller must have allowance for from's tokens of at least value.
+
+_transfer(address from, address to, uint256 value)
+
+internal
+
+#
+
+Moves a value amount of tokens from from to to.
+
+This internal function is equivalent to ERC20.transfer, and can be used to e.g. implement automatic token fees, slashing mechanisms, etc.
+
+Emits a IERC20.Transfer event.
+
+This function is not virtual, ERC20._update should be overridden instead.
+
+_update(address from, address to, uint256 value)
+
+internal
+
+#
+
+Transfers a value amount of tokens from from to to, or alternatively mints (or burns) if from (or to) is the zero address. All customizations to transfers, mints, and burns should be done by overriding this function.
+
+Emits a IERC20.Transfer event.
+
+_mint(address account, uint256 value)
+
+internal
+
+#
+
+Creates a value amount of tokens and assigns them to account, by transferring it from address(0). Relies on the _update mechanism
+
+Emits a IERC20.Transfer event with from set to the zero address.
+
+This function is not virtual, ERC20._update should be overridden instead.
+
+_burn(address account, uint256 value)
+
+internal
+
+#
+
+Destroys a value amount of tokens from account, lowering the total supply. Relies on the _update mechanism.
+
+Emits a IERC20.Transfer event with to set to the zero address.
+
+This function is not virtual, ERC20._update should be overridden instead
+
+_approve(address owner, address spender, uint256 value)
+
+internal
+
+#
+
+Sets value as the allowance of spender over the owner's tokens.
+
+This internal function is equivalent to approve, and can be used to e.g. set automatic allowances for certain subsystems, etc.
+
+Emits an IERC20.Approval event.
+
+Requirements:
+
+- owner cannot be the zero address.
+
+- spender cannot be the zero address.
+
+Overrides to this logic should be done to the variant with an additional bool emitEvent argument.
+
+_approve(address owner, address spender, uint256 value, bool emitEvent)
+
+internal
+
+#
+
+Variant of ERC20._approve with an optional flag to enable or disable the IERC20.Approval event.
+
+By default (when calling ERC20._approve) the flag is set to true. On the other hand, approval changes made by _spendAllowance during the transferFrom operation sets the flag to false. This saves gas by not emitting any Approval event during transferFrom operations.
+
+Anyone who wishes to continue emitting Approval events on the transferFrom operation can force the flag to true using the following override:
+
+function _approve(address owner, address spender, uint256 value, bool) internal virtual override {
+    super._approve(owner, spender, value, true);
+}
+
+Requirements are the same as ERC20._approve.
+
+_spendAllowance(address owner, address spender, uint256 value)
+
+internal
+
+#
+
+Updates owner's allowance for spender based on spent value.
+
+Does not update the allowance value in case of infinite allowance. Revert if not enough allowance is available.
+
+Does not emit an IERC20.Approval event.
+
+## IERC20
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
+Interface of the ERC-20 standard as defined in the ERC.
+
+### Functions
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+### Events
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+totalSupply() -> uint256
+
+external
+
+#
+
+Returns the value of tokens in existence.
+
+balanceOf(address account) -> uint256
+
+external
+
+#
+
+Returns the value of tokens owned by account.
+
+transfer(address to, uint256 value) -> bool
+
+external
+
+#
+
+Moves a value amount of tokens from the caller's account to to.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Emits a IERC20.Transfer event.
+
+allowance(address owner, address spender) -> uint256
+
+external
+
+#
+
+Returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through ERC20.transferFrom. This is zero by default.
+
+This value changes when ERC20.approve or ERC20.transferFrom are called.
+
+approve(address spender, uint256 value) -> bool
+
+external
+
+#
+
+Sets a value amount of tokens as the allowance of spender over the caller's tokens.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Beware that changing an allowance with this method brings the risk that someone may use both the old and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+
+Emits an IERC20.Approval event.
+
+transferFrom(address from, address to, uint256 value) -> bool
+
+external
+
+#
+
+Moves a value amount of tokens from from to to using the allowance mechanism. value is then deducted from the caller's allowance.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Emits a IERC20.Transfer event.
+
+Transfer(address indexed from, address indexed to, uint256 value)
+
+event
+
+#
+
+Emitted when value tokens are moved from one account (from) to another (to).
+
+Note that value may be zero.
+
+Approval(address indexed owner, address indexed spender, uint256 value)
+
+event
+
+#
+
+Emitted when the allowance of a spender for an owner is set by a call to ERC20.approve. value is the new allowance.
+
+## ERC1363
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC1363.sol";
+
+Extension of ERC20 tokens that adds support for code execution after transfers and approvals on recipient contracts. Calls after transfers are enabled through the ERC1363.transferAndCall and ERC1363.transferFromAndCall methods while calls after approvals can be made with ERC1363.approveAndCall
+
+Available since v5.1.
+
+### Functions
+
+- supportsInterface(interfaceId)
+
+- transferAndCall(to, value)
+
+- transferAndCall(to, value, data)
+
+- transferFromAndCall(from, to, value)
+
+- transferFromAndCall(from, to, value, data)
+
+- approveAndCall(spender, value)
+
+- approveAndCall(spender, value, data)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC1363TransferFailed(receiver, value)
+
+- ERC1363TransferFromFailed(sender, receiver, value)
+
+- ERC1363ApproveFailed(spender, value)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+supportsInterface(bytes4 interfaceId) -> bool
+
+public
+
+#
+
+Returns true if this contract implements the interface defined by interfaceId. See the corresponding ERC section to learn more about how these ids are created.
+
+This function call must use less than 30 000 gas.
+
+transferAndCall(address to, uint256 value) -> bool
+
+public
+
+#
+
+Moves a value amount of tokens from the caller's account to to and then calls IERC1363Receiver.onTransferReceived on to. Returns a flag that indicates if the call succeeded.
+
+Requirements:
+
+- The target has code (i.e. is a contract).
+
+- The target to must implement the IERC1363Receiver interface.
+
+- The target must return the IERC1363Receiver.onTransferReceived selector to accept the transfer.
+
+- The internal ERC20.transfer must succeed (returned true).
+
+transferAndCall(address to, uint256 value, bytes data) -> bool
+
+public
+
+#
+
+Variant of ERC1363.transferAndCall that accepts an additional data parameter with no specified format.
+
+transferFromAndCall(address from, address to, uint256 value) -> bool
+
+public
+
+#
+
+Moves a value amount of tokens from from to to using the allowance mechanism and then calls IERC1363Receiver.onTransferReceived on to. Returns a flag that indicates if the call succeeded.
+
+Requirements:
+
+- The target has code (i.e. is a contract).
+
+- The target to must implement the IERC1363Receiver interface.
+
+- The target must return the IERC1363Receiver.onTransferReceived selector to accept the transfer.
+
+- The internal ERC20.transferFrom must succeed (returned true).
+
+transferFromAndCall(address from, address to, uint256 value, bytes data) -> bool
+
+public
+
+#
+
+Variant of ERC1363.transferFromAndCall that accepts an additional data parameter with no specified format.
+
+approveAndCall(address spender, uint256 value) -> bool
+
+public
+
+#
+
+Sets a value amount of tokens as the allowance of spender over the caller's tokens and then calls IERC1363Spender.onApprovalReceived on spender. Returns a flag that indicates if the call succeeded.
+
+Requirements:
+
+- The target has code (i.e. is a contract).
+
+- The target spender must implement the IERC1363Spender interface.
+
+- The target must return the IERC1363Spender.onApprovalReceived selector to accept the approval.
+
+- The internal ERC20.approve must succeed (returned true).
+
+approveAndCall(address spender, uint256 value, bytes data) -> bool
+
+public
+
+#
+
+Variant of ERC1363.approveAndCall that accepts an additional data parameter with no specified format.
+
+ERC1363TransferFailed(address receiver, uint256 value)
+
+error
+
+#
+
+Indicates a failure within the ERC20.transfer part of a transferAndCall operation.
+
+ERC1363TransferFromFailed(address sender, address receiver, uint256 value)
+
+error
+
+#
+
+Indicates a failure within the ERC20.transferFrom part of a transferFromAndCall operation.
+
+ERC1363ApproveFailed(address spender, uint256 value)
+
+error
+
+#
+
+Indicates a failure within the ERC20.approve part of a approveAndCall operation.
+
+## ERC20Burnable
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+
+Extension of ERC20 that allows token holders to destroy both their own tokens and those that they have an allowance for, in a way that can be recognized off-chain (via event analysis).
+
+### Functions
+
+- burn(value)
+
+- burnFrom(account, value)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+burn(uint256 value)
+
+public
+
+#
+
+Destroys a value amount of tokens from the caller.
+
+See ERC20._burn.
+
+burnFrom(address account, uint256 value)
+
+public
+
+#
+
+Destroys a value amount of tokens from account, deducting from the caller's allowance.
+
+See ERC20._burn and ERC20.allowance.
+
+Requirements:
+
+- the caller must have allowance for accounts's tokens of at least value.
+
+## ERC20Capped
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
+
+Extension of ERC20 that adds a cap to the supply of tokens.
+
+### Functions
+
+- constructor(cap_)
+
+- cap()
+
+- _update(from, to, value)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC20ExceededCap(increasedSupply, cap)
+
+- ERC20InvalidCap(cap)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+constructor(uint256 cap_)
+
+internal
+
+#
+
+Sets the value of the cap. This value is immutable, it can only be set once during construction.
+
+cap() -> uint256
+
+public
+
+#
+
+Returns the cap on the token's total supply.
+
+_update(address from, address to, uint256 value)
+
+internal
+
+#
+
+Transfers a value amount of tokens from from to to, or alternatively mints (or burns) if from (or to) is the zero address. All customizations to transfers, mints, and burns should be done by overriding this function.
+
+Emits a IERC20.Transfer event.
+
+ERC20ExceededCap(uint256 increasedSupply, uint256 cap)
+
+error
+
+#
+
+Total supply cap has been exceeded.
+
+ERC20InvalidCap(uint256 cap)
+
+error
+
+#
+
+The supplied cap is not a valid cap.
+
+## ERC20Crosschain
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Crosschain.sol";
+
+Extension of ERC20 that makes it natively cross-chain using the ERC-7786 based BridgeFungible.
+
+This extension makes the token compatible with counterparts on other chains, which can be:
+
+- ERC20Crosschain instances,
+
+- ERC20 instances that are bridged using BridgeERC20,
+
+- ERC20Bridgeable instances that are bridged using BridgeERC7802.
+
+It is mostly equivalent to inheriting from both ERC20Bridgeable and BridgeERC7802, and configuring them such that:
+
+- token (on the BridgeERC7802 side) is address(this),
+
+- _checkTokenBridge (on the ERC20Bridgeable side) is implemented such that it only accepts self-calls.
+
+### Functions
+
+- crosschainTransferFrom(from, to, amount)
+
+- _onSend(from, amount)
+
+- _onReceive(to, amount)
+
+BridgeFungible
+
+- crosschainTransfer(to, amount)
+
+- _crosschainTransfer(from, to, amount)
+
+- _processMessage(, receiveId, , payload)
+
+CrosschainLinked
+
+- getLink(chain)
+
+- _setLink(gateway, counterpart, allowOverride)
+
+- _sendMessageToCounterpart(chain, payload, attributes)
+
+- _isAuthorizedGateway(instance, sender)
+
+ERC7786Recipient
+
+- receiveMessage(receiveId, sender, payload)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+BridgeFungible
+
+- CrosschainFungibleTransferSent(sendId, from, to, amount)
+
+- CrosschainFungibleTransferReceived(receiveId, from, to, amount)
+
+CrosschainLinked
+
+- LinkRegistered(gateway, counterpart)
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+CrosschainLinked
+
+- LinkAlreadyRegistered(chain)
+
+ERC7786Recipient
+
+- ERC7786RecipientUnauthorizedGateway(gateway, sender)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+crosschainTransferFrom(address from, bytes to, uint256 amount) -> bytes32
+
+public
+
+#
+
+Variant of BridgeFungible.crosschainTransfer that allows an authorized account (using ERC20 allowance) to operate on from's assets.
+
+_onSend(address from, uint256 amount)
+
+internal
+
+#
+
+"Locking" tokens is achieved through burning
+
+_onReceive(address to, uint256 amount)
+
+internal
+
+#
+
+"Unlocking" tokens is achieved through minting
+
+## ERC20FlashMint
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";
+
+Implementation of the ERC-3156 Flash loans extension, as defined in ERC-3156.
+
+Adds the ERC20FlashMint.flashLoan method, which provides flash loan support at the token level. By default there is no fee, but this can be changed by overriding ERC20FlashMint.flashFee.
+
+When this extension is used along with the ERC20Capped or ERC20Votes extensions, ERC20FlashMint.maxFlashLoan will not correctly reflect the maximum that can be flash minted. We recommend overriding ERC20FlashMint.maxFlashLoan so that it correctly reflects the supply cap.
+
+### Functions
+
+- maxFlashLoan(token)
+
+- flashFee(token, value)
+
+- _flashFee(, )
+
+- _flashFeeReceiver()
+
+- flashLoan(receiver, token, value, data)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC3156UnsupportedToken(token)
+
+- ERC3156ExceededMaxLoan(maxLoan)
+
+- ERC3156InvalidReceiver(receiver)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+maxFlashLoan(address token) -> uint256
+
+public
+
+#
+
+Returns the maximum amount of tokens available for loan.
+
+This function will not automatically detect any supply cap added by other extensions, such as ERC20Capped. If necessary, override this function to take a supply cap into account.
+
+flashFee(address token, uint256 value) -> uint256
+
+public
+
+#
+
+Returns the fee applied when doing flash loans. This function calls the ERC20FlashMint._flashFee function which returns the fee applied when doing flash loans.
+
+_flashFee(address, uint256) -> uint256
+
+internal
+
+#
+
+Returns the fee applied when doing flash loans. By default this implementation has 0 fees. This function can be overloaded to make the flash loan mechanism deflationary.
+
+_flashFeeReceiver() -> address
+
+internal
+
+#
+
+Returns the receiver address of the flash fee. By default this implementation returns the address(0) which means the fee amount will be burnt. This function can be overloaded to change the fee receiver.
+
+flashLoan(contract IERC3156FlashBorrower receiver, address token, uint256 value, bytes data) -> bool
+
+public
+
+#
+
+Performs a flash loan. New tokens are minted and sent to the receiver, who is required to implement the IERC3156FlashBorrower interface. By the end of the flash loan, the receiver is expected to own value + fee tokens and have them approved back to the token contract itself so they can be burned.
+
+ERC3156UnsupportedToken(address token)
+
+error
+
+#
+
+The loan token is not valid.
+
+ERC3156ExceededMaxLoan(uint256 maxLoan)
+
+error
+
+#
+
+The requested loan exceeds the max loan value for token.
+
+ERC3156InvalidReceiver(address receiver)
+
+error
+
+#
+
+The receiver of a flashloan is not a valid IERC3156FlashBorrower.onFlashLoan implementer.
+
+## ERC20Pausable
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+
+ERC-20 token with pausable token transfers, minting and burning.
+
+Useful for scenarios such as preventing trades until the end of an evaluation period, or having an emergency switch for freezing all token transfers in the event of a large bug.
+
+This contract does not include public pause and unpause functions. In addition to inheriting this contract, you must define both functions, invoking the Pausable._pause and Pausable._unpause internal functions, with appropriate access control, e.g. using AccessControl or Ownable. Not doing so will make the contract pause mechanism of the contract unreachable, and thus unusable.
+
+### Functions
+
+- _update(from, to, value)
+
+Pausable
+
+- paused()
+
+- _requireNotPaused()
+
+- _requirePaused()
+
+- _pause()
+
+- _unpause()
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+Pausable
+
+- Paused(account)
+
+- Unpaused(account)
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+Pausable
+
+- EnforcedPause()
+
+- ExpectedPause()
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+_update(address from, address to, uint256 value)
+
+internal
+
+#
+
+See ERC20._update.
+
+Requirements:
+
+- the contract must not be paused.
+
+## ERC20Permit
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+
+Implementation of the ERC-20 Permit extension allowing approvals to be made via signatures, as defined in ERC-2612.
+
+Adds the ERC20Permit.permit method, which can be used to change an account's ERC-20 allowance (see IERC20.allowance) by presenting a message signed by the account. By not relying on [IERC20.approve](#IERC20-approve-address-uint256-), the token holder account doesn't need to send a transaction, and thus is not required to hold Ether at all.
+
+### Functions
+
+- constructor(name)
+
+- permit(owner, spender, value, deadline, v, r, s)
+
+- nonces(owner)
+
+- DOMAIN_SEPARATOR()
+
+Nonces
+
+- _useNonce(owner)
+
+- _useCheckedNonce(owner, nonce)
+
+EIP712
+
+- _domainSeparatorV4()
+
+- _hashTypedDataV4(structHash)
+
+- eip712Domain()
+
+- _EIP712Name()
+
+- _EIP712Version()
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC5267
+
+- EIP712DomainChanged()
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC2612ExpiredSignature(deadline)
+
+- ERC2612InvalidSigner(signer, owner)
+
+Nonces
+
+- InvalidAccountNonce(account, currentNonce)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+constructor(string name)
+
+internal
+
+#
+
+Initializes the EIP712 domain separator using the name parameter, and setting version to "1".
+
+It's a good idea to use the same name that is defined as the ERC-20 token name.
+
+permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+
+public
+
+#
+
+Sets value as the allowance of spender over owner's tokens, given owner's signed approval.
+
+The same issues IERC20.approve has related to transaction ordering also applies here.
+
+Emits an IERC20.Approval event.
+
+Requirements:
+
+- spender cannot be the zero address.
+
+- deadline must be a timestamp in the future.
+
+- v, r and s must be a valid secp256k1 signature from owner over the EIP712-formatted function arguments.
+
+- the signature must use owner's current nonce (see ERC20Permit.nonces).
+
+For more information on the signature format, see the relevant EIP section.
+
+See Security Considerations above.
+
+nonces(address owner) -> uint256
+
+public
+
+#
+
+Returns the current nonce for owner. This value must be included whenever a signature is generated for ERC20Permit.permit.
+
+Every successful call to ERC20Permit.permit increases owner's nonce by one. This prevents a signature from being used multiple times.
+
+DOMAIN_SEPARATOR() -> bytes32
+
+external
+
+#
+
+Returns the domain separator used in the encoding of the signature for ERC20Permit.permit, as defined by EIP712.
+
+ERC2612ExpiredSignature(uint256 deadline)
+
+error
+
+#
+
+Permit deadline has expired.
+
+ERC2612InvalidSigner(address signer, address owner)
+
+error
+
+#
+
+Mismatched signature.
+
+## ERC20Votes
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
+
+Extension of ERC-20 to support Compound-like voting and delegation. This version is more generic than Compound's, and supports token supply up to 2^208^ - 1, while COMP is limited to 2^96^ - 1.
+
+This contract does not provide interface compatibility with Compound's COMP token.
+
+This extension keeps a history (checkpoints) of each account's vote power. Vote power can be delegated either by calling the Votes.delegate function directly, or by providing a signature to be used with Votes.delegateBySig. Voting power can be queried through the public accessors Votes.getVotes and Votes.getPastVotes.
+
+By default, token balance does not account for voting power. This makes transfers cheaper. The downside is that it requires users to delegate to themselves in order to activate checkpoints and have their voting power tracked.
+
+### Functions
+
+- _maxSupply()
+
+- _update(from, to, value)
+
+- _getVotingUnits(account)
+
+- numCheckpoints(account)
+
+- checkpoints(account, pos)
+
+Votes
+
+- clock()
+
+- CLOCK_MODE()
+
+- _validateTimepoint(timepoint)
+
+- getVotes(account)
+
+- getPastVotes(account, timepoint)
+
+- getPastTotalSupply(timepoint)
+
+- _getTotalSupply()
+
+- delegates(account)
+
+- delegate(delegatee)
+
+- delegateBySig(delegatee, nonce, expiry, v, r, s)
+
+- _delegate(account, delegatee)
+
+- _transferVotingUnits(from, to, amount)
+
+- _moveDelegateVotes(from, to, amount)
+
+- _numCheckpoints(account)
+
+- _checkpoints(account, pos)
+
+Nonces
+
+- nonces(owner)
+
+- _useNonce(owner)
+
+- _useCheckedNonce(owner, nonce)
+
+EIP712
+
+- _domainSeparatorV4()
+
+- _hashTypedDataV4(structHash)
+
+- eip712Domain()
+
+- _EIP712Name()
+
+- _EIP712Version()
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IVotes
+
+- DelegateChanged(delegator, fromDelegate, toDelegate)
+
+- DelegateVotesChanged(delegate, previousVotes, newVotes)
+
+IERC5267
+
+- EIP712DomainChanged()
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC20ExceededSafeSupply(increasedSupply, cap)
+
+Votes
+
+- ERC6372InconsistentClock()
+
+- ERC5805FutureLookup(timepoint, clock)
+
+IVotes
+
+- VotesExpiredSignature(expiry)
+
+Nonces
+
+- InvalidAccountNonce(account, currentNonce)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+_maxSupply() -> uint256
+
+internal
+
+#
+
+Maximum token supply. Defaults to type(uint208).max (2^208^ - 1).
+
+This maximum is enforced in ERC20._update. It limits the total supply of the token, which is otherwise a uint256, so that checkpoints can be stored in the Trace208 structure used by Votes. Increasing this value will not remove the underlying limitation, and will cause ERC20._update to fail because of a math overflow in Votes._transferVotingUnits. An override could be used to further restrict the total supply (to a lower value) if additional logic requires it. When resolving override conflicts on this function, the minimum should be returned.
+
+_update(address from, address to, uint256 value)
+
+internal
+
+#
+
+Move voting power when tokens are transferred.
+
+Emits a IVotes.DelegateVotesChanged event.
+
+_getVotingUnits(address account) -> uint256
+
+internal
+
+#
+
+Returns the voting units of an account.
+
+Overriding this function may compromise the internal vote accounting. ERC20Votes assumes tokens map to voting units 1:1 and this is not easy to change.
+
+numCheckpoints(address account) -> uint32
+
+public
+
+#
+
+Get number of checkpoints for account.
+
+checkpoints(address account, uint32 pos) -> struct Checkpoints.Checkpoint208
+
+public
+
+#
+
+Get the pos-th checkpoint for account.
+
+ERC20ExceededSafeSupply(uint256 increasedSupply, uint256 cap)
+
+error
+
+#
+
+Total supply cap has been exceeded, introducing a risk of votes overflowing.
+
+## ERC20Wrapper
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Wrapper.sol";
+
+Extension of the ERC-20 token contract to support token wrapping.
+
+Users can deposit and withdraw "underlying tokens" and receive a matching number of "wrapped tokens". This is useful in conjunction with other modules. For example, combining this wrapping mechanism with ERC20Votes will allow the wrapping of an existing "basic" ERC-20 into a governance token.
+
+Any mechanism in which the underlying token changes the ERC20.balanceOf of an account without an explicit transfer may desynchronize this contract's supply and its underlying balance. Please exercise caution when wrapping tokens that may undercollateralize the wrapper (i.e. wrapper's total supply is higher than its underlying balance). See ERC20Wrapper._recover for recovering value accrued to the wrapper.
+
+### Functions
+
+- constructor(underlyingToken)
+
+- decimals()
+
+- underlying()
+
+- depositFor(account, value)
+
+- withdrawTo(account, value)
+
+- _recover(account)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC20InvalidUnderlying(token)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+constructor(contract IERC20 underlyingToken)
+
+internal
+
+#
+
+decimals() -> uint8
+
+public
+
+#
+
+underlying() -> contract IERC20
+
+public
+
+#
+
+Returns the address of the underlying ERC-20 token that is being wrapped.
+
+depositFor(address account, uint256 value) -> bool
+
+public
+
+#
+
+Allow a user to deposit underlying tokens and mint the corresponding number of wrapped tokens.
+
+withdrawTo(address account, uint256 value) -> bool
+
+public
+
+#
+
+Allow a user to burn a number of wrapped tokens and withdraw the corresponding number of underlying tokens.
+
+_recover(address account) -> uint256
+
+internal
+
+#
+
+Mint wrapped token to cover any underlyingTokens that would have been transferred by mistake or acquired from rebasing mechanisms. Internal function that can be exposed with access control if desired.
+
+ERC20InvalidUnderlying(address token)
+
+error
+
+#
+
+The underlying token couldn't be wrapped.
+
+## ERC4626
+
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
+
+Implementation of the ERC-4626 "Tokenized Vault Standard" as defined in ERC-4626.
+
+This extension allows the minting and burning of "shares" (represented using the ERC-20 inheritance) in exchange for underlying "assets" through standardized ERC4626.deposit, ERC4626.mint, ERC4626.redeem and ERC20Burnable.burn workflows. This contract extends the ERC-20 standard. Any additional extensions included along it would affect the "shares" token represented by this contract and not the "assets" token which is an independent contract.
+
+In empty (or nearly empty) ERC-4626 vaults, deposits are at high risk of being stolen through frontrunning with a "donation" to the vault that inflates the price of a share. This is variously known as a donation or inflation attack and is essentially a problem of slippage. Vault deployers can protect against this attack by making an initial deposit of a non-trivial amount of the asset, such that price manipulation becomes infeasible. Withdrawals may similarly be affected by slippage. Users can protect against this attack as well as unexpected slippage in general by verifying the amount received is as expected, using a wrapper that performs these checks such as ERC4626Router.
+
+Since v4.9, this implementation introduces configurable virtual assets and shares to help developers mitigate that risk. The _decimalsOffset() corresponds to an offset in the decimal representation between the underlying asset's decimals and the vault decimals. This offset also determines the rate of virtual shares to virtual assets in the vault, which itself determines the initial exchange rate. While not fully preventing the attack, analysis shows that the default offset (0) makes it non-profitable even if an attacker is able to capture value from multiple user deposits, as a result of the value being captured by the virtual shares (out of the attacker's donation) matching the attacker's expected gains. With a larger offset, the attack becomes orders of magnitude more expensive than it is profitable. More details about the underlying math can be found here.
+
+The drawback of this approach is that the virtual shares do capture (a very small) part of the value being accrued to the vault. Also, if the vault experiences losses, the users try to exit the vault, the virtual shares and assets will cause the first user to exit to experience reduced losses in detriment to the last users that will experience bigger losses. Developers willing to revert back to the pre-v4.9 behavior just need to override the _convertToShares and _convertToAssets functions.
+
+To learn more, check out our ERC-4626 guide.
+
+When overriding this contract, some elements must be considered:
+
+-
+
+When overriding the behavior of the deposit or withdraw mechanisms, it is recommended to override the internal functions. Overriding ERC4626._deposit automatically affects both ERC4626.deposit and ERC4626.mint. Similarly, overriding ERC4626._withdraw automatically affects both ERC4626.withdraw and ERC4626.redeem. Overall it is not recommended to override the public facing functions since that could lead to inconsistent behaviors between the ERC4626.deposit and ERC4626.mint or between ERC4626.withdraw and ERC4626.redeem, which is documented to have led to loss of funds.
+
+-
+
+Overrides to the deposit or withdraw mechanism must be reflected in the preview functions as well.
+
+-
+
+ERC4626.maxWithdraw depends on ERC4626.maxRedeem. Therefore, overriding ERC4626.maxRedeem only is enough. On the other hand, overriding ERC4626.maxWithdraw only would have no effect on ERC4626.maxRedeem, and could create an inconsistency between the two functions.
+
+-
+
+If ERC4626.previewRedeem is overridden to revert, ERC4626.maxWithdraw must be overridden as necessary to ensure it always return successfully.
+
+### Functions
+
+- constructor(asset_)
+
+- decimals()
+
+- asset()
+
+- totalAssets()
+
+- convertToShares(assets)
+
+- convertToAssets(shares)
+
+- maxDeposit()
+
+- maxMint()
+
+- maxWithdraw(owner)
+
+- maxRedeem(owner)
+
+- previewDeposit(assets)
+
+- previewMint(shares)
+
+- previewWithdraw(assets)
+
+- previewRedeem(shares)
+
+- deposit(assets, receiver)
+
+- mint(shares, receiver)
+
+- withdraw(assets, receiver, owner)
+
+- redeem(shares, receiver, owner)
+
+- _convertToShares(assets, rounding)
+
+- _convertToAssets(shares, rounding)
+
+- _deposit(caller, receiver, assets, shares)
+
+- _withdraw(caller, receiver, owner, assets, shares)
+
+- _transferIn(from, assets)
+
+- _transferOut(to, assets)
+
+- _decimalsOffset()
+
+ERC20
+
+- name()
+
+- symbol()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC4626
+
+- Deposit(sender, owner, assets, shares)
+
+- Withdraw(sender, receiver, owner, assets, shares)
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+- ERC4626ExceededMaxDeposit(receiver, assets, max)
+
+- ERC4626ExceededMaxMint(receiver, shares, max)
+
+- ERC4626ExceededMaxWithdraw(owner, assets, max)
+
+- ERC4626ExceededMaxRedeem(owner, shares, max)
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+constructor(contract IERC20 asset_)
+
+internal
+
+#
+
+Set the underlying asset contract. This must be an ERC20-compatible contract (ERC-20 or ERC-777).
+
+decimals() -> uint8
+
+public
+
+#
+
+Decimals are computed by adding the decimal offset on top of the underlying asset's decimals. This "original" value is cached during construction of the vault contract. If this read operation fails (e.g., the asset has not been created yet), a default of 18 is used to represent the underlying asset's decimals.
+
+See IERC20Metadata.decimals.
+
+asset() -> address
+
+public
+
+#
+
+Returns the address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
+
+- MUST be an ERC-20 token contract.
+
+- MUST NOT revert.
+
+totalAssets() -> uint256
+
+public
+
+#
+
+Returns the total amount of the underlying asset that is "managed" by Vault.
+
+- SHOULD include any compounding that occurs from yield.
+
+- MUST be inclusive of any fees that are charged against assets in the Vault.
+
+- MUST NOT revert.
+
+convertToShares(uint256 assets) -> uint256
+
+public
+
+#
+
+Returns the amount of shares that the Vault would exchange for the amount of assets provided, in an ideal scenario where all the conditions are met.
+
+- MUST NOT be inclusive of any fees that are charged against assets in the Vault.
+
+- MUST NOT show any variations depending on the caller.
+
+- MUST NOT reflect slippage or other on-chain conditions, when performing the actual exchange.
+
+- MUST NOT revert.
+
+This calculation MAY NOT reflect the "per-user" price-per-share, and instead should reflect the "average-user's" price-per-share, meaning what the average user should expect to see when exchanging to and from.
+
+convertToAssets(uint256 shares) -> uint256
+
+public
+
+#
+
+Returns the amount of assets that the Vault would exchange for the amount of shares provided, in an ideal scenario where all the conditions are met.
+
+- MUST NOT be inclusive of any fees that are charged against assets in the Vault.
+
+- MUST NOT show any variations depending on the caller.
+
+- MUST NOT reflect slippage or other on-chain conditions, when performing the actual exchange.
+
+- MUST NOT revert.
+
+This calculation MAY NOT reflect the "per-user" price-per-share, and instead should reflect the "average-user's" price-per-share, meaning what the average user should expect to see when exchanging to and from.
+
+maxDeposit(address) -> uint256
+
+public
+
+#
+
+Returns the maximum amount of the underlying asset that can be deposited into the Vault for the receiver, through a deposit call.
+
+- MUST return a limited value if receiver is subject to some deposit limit.
+
+- MUST return 2 ** 256 - 1 if there is no limit on the maximum amount of assets that may be deposited.
+
+- MUST NOT revert.
+
+maxMint(address) -> uint256
+
+public
+
+#
+
+Returns the maximum amount of the Vault shares that can be minted for the receiver, through a mint call.
+
+- MUST return a limited value if receiver is subject to some mint limit.
+
+- MUST return 2 ** 256 - 1 if there is no limit on the maximum amount of shares that may be minted.
+
+- MUST NOT revert.
+
+maxWithdraw(address owner) -> uint256
+
+public
+
+#
+
+Returns the maximum amount of the underlying asset that can be withdrawn from the owner balance in the Vault, through a withdraw call.
+
+- MUST return a limited value if owner is subject to some withdrawal limit or timelock.
+
+- MUST NOT revert.
+
+maxRedeem(address owner) -> uint256
+
+public
+
+#
+
+Returns the maximum amount of Vault shares that can be redeemed from the owner balance in the Vault, through a redeem call.
+
+- MUST return a limited value if owner is subject to some withdrawal limit or timelock.
+
+- MUST return balanceOf(owner) if owner is not subject to any withdrawal limit or timelock.
+
+- MUST NOT revert.
+
+previewDeposit(uint256 assets) -> uint256
+
+public
+
+#
+
+Allows an on-chain or off-chain user to simulate the effects of their deposit at the current block, given current on-chain conditions.
+
+- MUST return as close to and no more than the exact amount of Vault shares that would be minted in a deposit call in the same transaction. I.e. deposit should return the same or more shares as previewDeposit if called in the same transaction.
+
+- MUST NOT account for deposit limits like those returned from maxDeposit and should always act as though the deposit would be accepted, regardless if the user has enough tokens approved, etc.
+
+- MUST be inclusive of deposit fees. Integrators should be aware of the existence of deposit fees.
+
+- MUST NOT revert.
+
+any unfavorable discrepancy between convertToShares and previewDeposit SHOULD be considered slippage in share price or some other type of condition, meaning the depositor will lose assets by depositing.
+
+previewMint(uint256 shares) -> uint256
+
+public
+
+#
+
+Allows an on-chain or off-chain user to simulate the effects of their mint at the current block, given current on-chain conditions.
+
+- MUST return as close to and no fewer than the exact amount of assets that would be deposited in a mint call in the same transaction. I.e. mint should return the same or fewer assets as previewMint if called in the same transaction.
+
+- MUST NOT account for mint limits like those returned from maxMint and should always act as though the mint would be accepted, regardless if the user has enough tokens approved, etc.
+
+- MUST be inclusive of deposit fees. Integrators should be aware of the existence of deposit fees.
+
+- MUST NOT revert.
+
+any unfavorable discrepancy between convertToAssets and previewMint SHOULD be considered slippage in share price or some other type of condition, meaning the depositor will lose assets by minting.
+
+previewWithdraw(uint256 assets) -> uint256
+
+public
+
+#
+
+Allows an on-chain or off-chain user to simulate the effects of their withdrawal at the current block, given current on-chain conditions.
+
+- MUST return as close to and no fewer than the exact amount of Vault shares that would be burned in a withdraw call in the same transaction. I.e. withdraw should return the same or fewer shares as previewWithdraw if called in the same transaction.
+
+- MUST NOT account for withdrawal limits like those returned from maxWithdraw and should always act as though the withdrawal would be accepted, regardless if the user has enough shares, etc.
+
+- MUST be inclusive of withdrawal fees. Integrators should be aware of the existence of withdrawal fees.
+
+- MUST NOT revert.
+
+any unfavorable discrepancy between convertToShares and previewWithdraw SHOULD be considered slippage in share price or some other type of condition, meaning the depositor will lose assets by depositing.
+
+previewRedeem(uint256 shares) -> uint256
+
+public
+
+#
+
+Allows an on-chain or off-chain user to simulate the effects of their redemption at the current block, given current on-chain conditions.
+
+- MUST return as close to and no more than the exact amount of assets that would be withdrawn in a redeem call in the same transaction. I.e. redeem should return the same or more assets as previewRedeem if called in the same transaction.
+
+- MUST NOT account for redemption limits like those returned from maxRedeem and should always act as though the redemption would be accepted, regardless if the user has enough shares, etc.
+
+- MUST be inclusive of withdrawal fees. Integrators should be aware of the existence of withdrawal fees.
+
+- MUST NOT revert.
+
+any unfavorable discrepancy between convertToAssets and previewRedeem SHOULD be considered slippage in share price or some other type of condition, meaning the depositor will lose assets by redeeming.
+
+deposit(uint256 assets, address receiver) -> uint256
+
+public
+
+#
+
+Deposit assets underlying tokens and send the corresponding number of vault shares (shares) to receiver.
+
+- MUST emit the Deposit event.
+
+- MAY support an additional flow in which the underlying tokens are owned by the Vault contract before the deposit execution, and are accounted for during deposit.
+
+- MUST revert if all of assets cannot be deposited (due to deposit limit being reached, slippage, the user not approving enough underlying tokens to the Vault contract, etc).
+
+most implementations will require pre-approval of the Vault with the Vault's underlying asset token.
+
+mint(uint256 shares, address receiver) -> uint256
+
+public
+
+#
+
+Mints exactly shares vault shares to receiver in exchange for assets underlying tokens.
+
+- MUST emit the Deposit event.
+
+- MAY support an additional flow in which the underlying tokens are owned by the Vault contract before the mint execution, and are accounted for during mint.
+
+- MUST revert if all of shares cannot be minted (due to deposit limit being reached, slippage, the user not approving enough underlying tokens to the Vault contract, etc).
+
+most implementations will require pre-approval of the Vault with the Vault's underlying asset token.
+
+withdraw(uint256 assets, address receiver, address owner) -> uint256
+
+public
+
+#
+
+Burns shares from owner and sends exactly assets of underlying tokens to receiver.
+
+- MUST emit the Withdraw event.
+
+- MAY support an additional flow in which the underlying tokens are owned by the Vault contract before the withdraw execution, and are accounted for during withdraw.
+
+- MUST revert if all of assets cannot be withdrawn (due to withdrawal limit being reached, slippage, the owner not having enough shares, etc).
+
+Note that some implementations will require pre-requesting to the Vault before a withdrawal may be performed. Those methods should be performed separately.
+
+redeem(uint256 shares, address receiver, address owner) -> uint256
+
+public
+
+#
+
+Burns exactly shares from owner and sends assets of underlying tokens to receiver.
+
+- MUST emit the Withdraw event.
+
+- MAY support an additional flow in which the underlying tokens are owned by the Vault contract before the redeem execution, and are accounted for during redeem.
+
+- MUST revert if all of shares cannot be redeemed (due to withdrawal limit being reached, slippage, the owner not having enough shares, etc).
+
+some implementations will require pre-requesting to the Vault before a withdrawal may be performed. Those methods should be performed separately.
+
+_convertToShares(uint256 assets, enum Math.Rounding rounding) -> uint256
+
+internal
+
+#
+
+Internal conversion function (from assets to shares) with support for rounding direction.
+
+_convertToAssets(uint256 shares, enum Math.Rounding rounding) -> uint256
+
+internal
+
+#
+
+Internal conversion function (from shares to assets) with support for rounding direction.
+
+_deposit(address caller, address receiver, uint256 assets, uint256 shares)
+
+internal
+
+#
+
+Deposit/mint common workflow.
+
+_withdraw(address caller, address receiver, address owner, uint256 assets, uint256 shares)
+
+internal
+
+#
+
+Withdraw/redeem common workflow.
+
+_transferIn(address from, uint256 assets)
+
+internal
+
+#
+
+Performs a transfer in of underlying assets. The default implementation uses SafeERC20. Used by ERC4626._deposit.
+
+_transferOut(address to, uint256 assets)
+
+internal
+
+#
+
+Performs a transfer out of underlying assets. The default implementation uses SafeERC20. Used by ERC4626._withdraw.
+
+_decimalsOffset() -> uint8
+
+internal
+
+#
+
+ERC4626ExceededMaxDeposit(address receiver, uint256 assets, uint256 max)
+
+error
+
+#
+
+Attempted to deposit more assets than the max amount for receiver.
+
+ERC4626ExceededMaxMint(address receiver, uint256 shares, uint256 max)
+
+error
+
+#
+
+Attempted to mint more shares than the max amount for receiver.
+
+ERC4626ExceededMaxWithdraw(address owner, uint256 assets, uint256 max)
+
+error
+
+#
+
+Attempted to withdraw more assets than the max amount for owner.
+
+ERC4626ExceededMaxRedeem(address owner, uint256 shares, uint256 max)
+
+error
+
+#
+
+Attempted to redeem more shares than the max amount for owner.
+
+## IERC20Metadata
+
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
+Interface for the optional metadata functions from the ERC-20 standard.
+
+### Functions
+
+- name()
+
+- symbol()
+
+- decimals()
+
+IERC20
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+name() -> string
+
+external
+
+#
+
+Returns the name of the token.
+
+symbol() -> string
+
+external
+
+#
+
+Returns the symbol of the token.
+
+decimals() -> uint8
+
+external
+
+#
+
+Returns the decimals places of the token.
+
+## IERC20Permit
+
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol";
+
+Interface of the ERC-20 Permit extension allowing approvals to be made via signatures, as defined in ERC-2612.
+
+Adds the ERC20Permit.permit method, which can be used to change an account's ERC-20 allowance (see IERC20.allowance) by presenting a message signed by the account. By not relying on IERC20.approve, the token holder account doesn't need to send a transaction, and thus is not required to hold Ether at all.
+
+#### Security Considerations
+
+There are two important considerations concerning the use of permit. The first is that a valid permit signature expresses an allowance, and it should not be assumed to convey additional meaning. In particular, it should not be considered as an intention to spend the allowance in any specific way. The second is that because permits have built-in replay protection and can be submitted by anyone, they can be frontrun. A protocol that uses permits should take this into consideration and allow a permit call to fail. Combining these two aspects, a pattern that may be generally recommended is:
+
+function doThingWithPermit(..., uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s) public {
+    try token.permit(msg.sender, address(this), value, deadline, v, r, s) {} catch {}
+    doThing(..., value);
+}
+
+function doThing(..., uint256 value) public {
+    token.safeTransferFrom(msg.sender, address(this), value);
+    ...
+}
+
+Observe that: 1) msg.sender is used as the owner, leaving no ambiguity as to the signer intent, and 2) the use of try/catch allows the permit to fail and makes the code tolerant to frontrunning. (See also SafeERC20.safeTransferFrom).
+
+Additionally, note that smart contract wallets (such as Argent or Safe) are not able to produce permit signatures, so contracts should have entry points that don't rely on permit.
+
+### Functions
+
+- permit(owner, spender, value, deadline, v, r, s)
+
+- nonces(owner)
+
+- DOMAIN_SEPARATOR()
+
+permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+
+external
+
+#
+
+Sets value as the allowance of spender over owner's tokens, given owner's signed approval.
+
+The same issues IERC20.approve has related to transaction ordering also applies here.
+
+Emits an IERC20.Approval event.
+
+Requirements:
+
+- spender cannot be the zero address.
+
+- deadline must be a timestamp in the future.
+
+- v, r and s must be a valid secp256k1 signature from owner over the EIP712-formatted function arguments.
+
+- the signature must use owner's current nonce (see ERC20Permit.nonces).
+
+For more information on the signature format, see the relevant EIP section.
+
+See Security Considerations above.
+
+nonces(address owner) -> uint256
+
+external
+
+#
+
+Returns the current nonce for owner. This value must be included whenever a signature is generated for ERC20Permit.permit.
+
+Every successful call to ERC20Permit.permit increases owner's nonce by one. This prevents a signature from being used multiple times.
+
+DOMAIN_SEPARATOR() -> bytes32
+
+external
+
+#
+
+Returns the domain separator used in the encoding of the signature for ERC20Permit.permit, as defined by EIP712.
+
+## ERC20Bridgeable
+
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Bridgeable.sol";
+
+ERC20 extension that implements the standard token interface according to ERC-7802.
+
+### Modifiers
+
+- onlyTokenBridge()
+
+### Functions
+
+- supportsInterface(interfaceId)
+
+- crosschainMint(to, value)
+
+- crosschainBurn(from, value)
+
+- _checkTokenBridge(caller)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- allowance(owner, spender)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+- _spendAllowance(owner, spender, value)
+
+### Events
+
+IERC7802
+
+- CrosschainMint(to, amount, sender)
+
+- CrosschainBurn(from, amount, sender)
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+onlyTokenBridge()
+
+internal
+
+#
+
+Modifier to restrict access to the token bridge.
+
+supportsInterface(bytes4 interfaceId) -> bool
+
+public
+
+#
+
+Returns true if this contract implements the interface defined by interfaceId. See the corresponding ERC section to learn more about how these ids are created.
+
+This function call must use less than 30 000 gas.
+
+crosschainMint(address to, uint256 value)
+
+public
+
+#
+
+See IERC7802.crosschainMint. Emits a IERC7802.CrosschainMint event.
+
+crosschainBurn(address from, uint256 value)
+
+public
+
+#
+
+See IERC7802.crosschainBurn. Emits a IERC7802.CrosschainBurn event.
+
+_checkTokenBridge(address caller)
+
+internal
+
+#
+
+Checks if the caller is a trusted token bridge. MUST revert otherwise.
+
+Developers should implement this function using an access control mechanism that allows customizing the list of allowed senders. Consider using AccessControl or AccessManaged.
+
+## ERC20TemporaryApproval
+
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20TemporaryApproval.sol";
+
+Extension of ERC20 that adds support for temporary allowances following ERC-7674.
+
+This is a draft contract. The corresponding ERC is still subject to changes.
+
+Available since v5.1.
+
+### Functions
+
+- allowance(owner, spender)
+
+- _temporaryAllowance(owner, spender)
+
+- temporaryApprove(spender, value)
+
+- _temporaryApprove(owner, spender, value)
+
+- _spendAllowance(owner, spender, value)
+
+ERC20
+
+- name()
+
+- symbol()
+
+- decimals()
+
+- totalSupply()
+
+- balanceOf(account)
+
+- transfer(to, value)
+
+- approve(spender, value)
+
+- transferFrom(from, to, value)
+
+- _transfer(from, to, value)
+
+- _update(from, to, value)
+
+- _mint(account, value)
+
+- _burn(account, value)
+
+- _approve(owner, spender, value)
+
+- _approve(owner, spender, value, emitEvent)
+
+### Events
+
+IERC20
+
+- Transfer(from, to, value)
+
+- Approval(owner, spender, value)
+
+### Errors
+
+IERC20Errors
+
+- ERC20InsufficientBalance(sender, balance, needed)
+
+- ERC20InvalidSender(sender)
+
+- ERC20InvalidReceiver(receiver)
+
+- ERC20InsufficientAllowance(spender, allowance, needed)
+
+- ERC20InvalidApprover(approver)
+
+- ERC20InvalidSpender(spender)
+
+allowance(address owner, address spender) -> uint256
+
+public
+
+#
+
+ERC20.allowance override that includes the temporary allowance when looking up the current allowance. If adding up the persistent and the temporary allowances result in an overflow, type(uint256).max is returned.
+
+_temporaryAllowance(address owner, address spender) -> uint256
+
+internal
+
+#
+
+Internal getter for the current temporary allowance that spender has over owner tokens.
+
+temporaryApprove(address spender, uint256 value) -> bool
+
+public
+
+#
+
+Alternative to ERC20.approve that sets a value amount of tokens as the temporary allowance of spender over the caller's tokens.
+
+Returns a boolean value indicating whether the operation succeeded.
+
+Requirements:
+
+- spender cannot be the zero address.
+
+Does NOT emit an IERC20.Approval event.
+
+_temporaryApprove(address owner, address spender, uint256 value)
+
+internal
+
+#
+
+Sets value as the temporary allowance of spender over the owner's tokens.
+
+This internal function is equivalent to temporaryApprove, and can be used to e.g. set automatic allowances for certain subsystems, etc.
+
+Requirements:
+
+- owner cannot be the zero address.
+
+- spender cannot be the zero address.
+
+Does NOT emit an IERC20.Approval event.
+
+_spendAllowance(address owner, address spender, uint256 value)
+
+internal
+
+#
+
+ERC20._spendAllowance override that consumes the temporary allowance (if any) before eventually falling back to consuming the persistent allowance.
+
+This function skips calling super._spendAllowance if the temporary allowance is enough to cover the spending.
+
+## ERC1363Utils
+
+import "@openzeppelin/contracts/token/ERC20/utils/ERC1363Utils.sol";
+
+Library that provides common ERC-1363 utility functions.
+
+See ERC-1363.
+
+### Functions
+
+- checkOnERC1363TransferReceived(operator, from, to, value, data)
+
+- checkOnERC1363ApprovalReceived(operator, spender, value, data)
+
+### Errors
+
+- ERC1363InvalidReceiver(receiver)
+
+- ERC1363InvalidSpender(spender)
+
+checkOnERC1363TransferReceived(address operator, address from, address to, uint256 value, bytes data)
+
+internal
+
+#
+
+Performs a call to IERC1363Receiver.onTransferReceived on a target address.
+
+Requirements:
+
+- The target has code (i.e. is a contract).
+
+- The target to must implement the IERC1363Receiver interface.
+
+- The target must return the IERC1363Receiver.onTransferReceived selector to accept the transfer.
+
+checkOnERC1363ApprovalReceived(address operator, address spender, uint256 value, bytes data)
+
+internal
+
+#
+
+Performs a call to IERC1363Spender.onApprovalReceived on a target address.
+
+Requirements:
+
+- The target has code (i.e. is a contract).
+
+- The target spender must implement the IERC1363Spender interface.
+
+- The target must return the IERC1363Spender.onApprovalReceived selector to accept the approval.
+
+ERC1363InvalidReceiver(address receiver)
+
+error
+
+#
+
+Indicates a failure with the token receiver. Used in transfers.
+
+ERC1363InvalidSpender(address spender)
+
+error
+
+#
+
+Indicates a failure with the token spender. Used in approvals.
+
+## SafeERC20
+
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+Wrappers around ERC-20 operations that throw on failure (when the token contract returns false). Tokens that return no value (and instead revert or throw on failure) are also supported, non-reverting calls are assumed to be successful. To use this library you can add a using SafeERC20 for IERC20; statement to your contract, which allows you to call the safe operations as token.safeTransfer(...), etc.
+
+### Functions
+
+- safeTransfer(token, to, value)
+
+- safeTransferFrom(token, from, to, value)
+
+- trySafeTransfer(token, to, value)
+
+- trySafeTransferFrom(token, from, to, value)
+
+- safeIncreaseAllowance(token, spender, value)
+
+- safeDecreaseAllowance(token, spender, requestedDecrease)
+
+- forceApprove(token, spender, value)
+
+- transferAndCallRelaxed(token, to, value, data)
+
+- transferFromAndCallRelaxed(token, from, to, value, data)
+
+- approveAndCallRelaxed(token, to, value, data)
+
+### Errors
+
+- SafeERC20FailedOperation(token)
+
+- SafeERC20FailedDecreaseAllowance(spender, currentAllowance, requestedDecrease)
+
+safeTransfer(contract IERC20 token, address to, uint256 value)
+
+internal
+
+#
+
+Transfer value amount of token from the calling contract to to. If token returns no value, non-reverting calls are assumed to be successful.
+
+safeTransferFrom(contract IERC20 token, address from, address to, uint256 value)
+
+internal
+
+#
+
+Transfer value amount of token from from to to, spending the approval given by from to the calling contract. If token returns no value, non-reverting calls are assumed to be successful.
+
+trySafeTransfer(contract IERC20 token, address to, uint256 value) -> bool
+
+internal
+
+#
+
+Variant of SafeERC20.safeTransfer that returns a bool instead of reverting if the operation is not successful.
+
+trySafeTransferFrom(contract IERC20 token, address from, address to, uint256 value) -> bool
+
+internal
+
+#
+
+Variant of SafeERC20.safeTransferFrom that returns a bool instead of reverting if the operation is not successful.
+
+safeIncreaseAllowance(contract IERC20 token, address spender, uint256 value)
+
+internal
+
+#
+
+Increase the calling contract's allowance toward spender by value. If token returns no value, non-reverting calls are assumed to be successful.
+
+If the token implements ERC-7674 (ERC-20 with temporary allowance), and if the "client" smart contract uses ERC-7674 to set temporary allowances, then the "client" smart contract should avoid using this function. Performing a SafeERC20.safeIncreaseAllowance or SafeERC20.safeDecreaseAllowance operation on a token contract that has a non-zero temporary allowance (for that particular owner-spender) will result in unexpected behavior.
+
+safeDecreaseAllowance(contract IERC20 token, address spender, uint256 requestedDecrease)
+
+internal
+
+#
+
+Decrease the calling contract's allowance toward spender by requestedDecrease. If token returns no value, non-reverting calls are assumed to be successful.
+
+If the token implements ERC-7674 (ERC-20 with temporary allowance), and if the "client" smart contract uses ERC-7674 to set temporary allowances, then the "client" smart contract should avoid using this function. Performing a SafeERC20.safeIncreaseAllowance or SafeERC20.safeDecreaseAllowance operation on a token contract that has a non-zero temporary allowance (for that particular owner-spender) will result in unexpected behavior.
+
+forceApprove(contract IERC20 token, address spender, uint256 value)
+
+internal
+
+#
+
+Set the calling contract's allowance toward spender to value. If token returns no value, non-reverting calls are assumed to be successful. Meant to be used with tokens that require the approval to be set to zero before setting it to a non-zero value, such as USDT.
+
+If the token implements ERC-7674, this function will not modify any temporary allowance. This function only sets the "standard" allowance. Any temporary allowance will remain active, in addition to the value being set here.
+
+transferAndCallRelaxed(contract IERC1363 token, address to, uint256 value, bytes data)
+
+internal
+
+#
+
+Performs an ERC1363 transferAndCall, with a fallback to the simple ERC20 transfer if the target has no code. This can be used to implement an ERC721-like safe transfer that relies on ERC1363 checks when targeting contracts.
+
+Reverts if the returned value is other than true.
+
+transferFromAndCallRelaxed(contract IERC1363 token, address from, address to, uint256 value, bytes data)
+
+internal
+
+#
+
+Performs an ERC1363 transferFromAndCall, with a fallback to the simple ERC20 transferFrom if the target has no code. This can be used to implement an ERC721-like safe transfer that relies on ERC1363 checks when targeting contracts.
+
+Reverts if the returned value is other than true.
+
+approveAndCallRelaxed(contract IERC1363 token, address to, uint256 value, bytes data)
+
+internal
+
+#
+
+Performs an ERC1363 approveAndCall, with a fallback to the simple ERC20 approve if the target has no code. This can be used to implement an ERC721-like safe transfer that rely on ERC1363 checks when targeting contracts.
+
+When the recipient address (to) has no code (i.e. is an EOA), this function behaves as SafeERC20.forceApprove. Oppositely, when the recipient address (to) has code, this function only attempts to call ERC1363.approveAndCall once without retrying, and relies on the returned value to be true.
+
+Reverts if the returned value is other than true.
+
+SafeERC20FailedOperation(address token)
+
+error
+
+#
+
+An operation with an ERC-20 token failed.
+
+SafeERC20FailedDecreaseAllowance(address spender, uint256 currentAllowance, uint256 requestedDecrease)
+
+error
+
+#
+
+Indicates a failed decreaseAllowance request.

@@ -1,0 +1,26 @@
+tokenomics-check checks
+
+  plan-unreadable         error    input          the file is not JSON the reader can follow, or its top level is not an object, so no plan was read
+  field-missing           error    input          a field the checks need is not in the plan: the name, symbol, decimals, mintable flag, a supply or the allocations of the token, or the name, kind, amount or percent, or vesting of a bucket, or the month and part of a step of a schedule
+  field-unknown           warning  input          a key the tool does not read, often a misspelt one; its value was left out of every check
+  field-invalid           error    input          a value of the wrong type or form: text where a number or a flag belongs, a month that is not a whole number, a negative amount, a kind the tool does not know, or two forms of vesting in one bucket
+  bucket-duplicate        error    input          two buckets share a name (compared without case and outer spaces), so a reader cannot tell which line a total comes from
+  percent-out-of-range    error    input          a percent below 0 or above 100: the share of a bucket, the part released at launch or a step of a schedule
+  allocation-sum          error    best practice  the buckets do not add up to the supply of the plan (the maximum supply when one is given, else the total supply), counted in base units with amounts and percents together
+  percent-rounding        info     documented     a bucket given as a percent of the supply is not a whole number of base units at the decimals of the token, so it is rounded down and the rest is in no bucket
+  amount-precision        error    documented     an amount or a supply has more places after the point than the token has decimals, so it cannot be held in base units
+  decimals-out-of-range   error    documented     the decimals are not a whole number from 0 to 255, which is what a uint8 on Ethereum and a u8 on Solana hold
+  decimals-unusual        warning  best practice  an EVM token with more than 18 decimals, past what the OpenZeppelin guide advises and what Ether uses
+  supply-overflow         error    documented     the supply in base units does not fit the number the chain keeps it in: a uint256 for ERC-20, a u64 for a Solana mint
+  supply-over-cap         error    documented     the total supply of the plan is larger than its maximum supply, so a cap at the maximum would refuse to mint it
+  mint-cap-missing        error    documented     a mintable token states a maximum supply but names nothing that enforces it, such as ERC20Capped or a mint authority set to None
+  cliff-over-duration     error    documented     a bucket in the VestingWallet form (durationMonths) has a cliff longer than its duration, which VestingWalletCliff refuses
+  insider-launch-release  warning  best practice  a team, insider, advisor or investor bucket releases a part at launch (month 0)
+  insider-no-cliff        warning  best practice  a team, insider, advisor or investor bucket releases a part after launch but before the month of --min-cliff (default 6)
+  vesting-too-short       warning  best practice  a team, insider, advisor or investor bucket is fully released before the month of --min-vesting (default 12)
+  vesting-too-long        info     best practice  a bucket still releases after the month of --max-vesting (default 60)
+  schedule-mismatch       error    best practice  the schedule of a bucket releases more than the bucket holds, or never releases all of it (a schedule that falls short, or a launch part below 100 with no months after it)
+  supply-cliff            warning  best practice  in one month after launch the buckets release more than --cliff-share (default 25) percent of the supply in circulation before that month
+  trading-without-float   warning  best practice  the plan says trading starts at launch, but no liquidity or public sale bucket releases anything at launch
+
+A documented check rests on EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; a best practice check is this tool's own choice and says so in its message. An input check is about the plan file itself.

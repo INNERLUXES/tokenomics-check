@@ -1,0 +1,184 @@
+Source: https://solana.com/docs/tokens
+Fetched and converted to plain text for reading; the page itself is the authority.
+
+Solana Documentation
+
+# Assets on Solana
+
+Tokens are digital assets that represent ownership over diverse categories of assets. Tokenization enables the digitalization of property rights. Tokens on Solana are referred to as SPL (Solana Program Library) Tokens.
+
+### Create a token with the CLI
+
+Create a mint, mint supply, and transfer tokens on devnet from your browser.
+
+This section covers the basic concepts of how tokens are represented on Solana. Refer to the SPL Token Basics section for code examples.
+
+## Key Points
+
+-
+
+Token Programs contain all instruction logic for interacting with tokens on the network (both fungible and non-fungible).
+
+-
+
+A Mint Account represents a specific token and stores global metadata about the token such as the total supply and mint authority (address authorized to create new units of a token).
+
+-
+
+A Token Account tracks individual ownership of tokens for a specific mint account for a specific owner.
+
+-
+
+An Associated Token Account is a Token Account created with an address derived from the owner and mint account addresses.
+
+## Token Programs
+
+The Solana ecosystem has two main Token Programs. Source code for both programs below.
+
+### Token Program (Original)
+
+- Basic token capability (mint, transfer, etc.)
+
+- Immutable and widely used
+
+### Token Extension Program
+
+- Includes all original Token Program features
+
+- Adds features through "extensions"
+
+Token Programs contains all instruction logic for interacting with tokens on the network (both fungible and non-fungible). All tokens on Solana are effectively data accounts owned by a Token Program.
+
+Token Program
+
+### Mint Account
+
+Tokens on Solana are uniquely identified by the address of a Mint Account owned by the Token Program. This account acts as a global counter for a specific token and stores data such as:
+
+- Supply: Total supply of the token
+
+- Decimals: Decimal precision of the token
+
+- Mint authority: The account authorized to create new units of the token, increasing the supply
+
+- Freeze authority: The account authorized to freeze tokens in a Token Account, preventing them from being transferred or burned
+
+The mint authority is configured when the mint is initialized. It authorizes future minting, but it does not have to be the account that created or paid for the mint account.
+
+Mint Account
+
+The full details stored on each Mint Account include the following:
+
+Mint Account State
+
+pub struct Mint {
+
+    /// Optional authority used to mint new tokens. The mint authority may only
+
+    /// be provided during mint creation. If no mint authority is present
+
+    /// then the mint has a fixed supply and no further tokens may be
+
+    /// minted.
+
+    pub mint_authority: COption<Pubkey>,
+
+    /// Total supply of tokens.
+
+    pub supply: u64,
+
+    /// Number of base 10 digits to the right of the decimal place.
+
+    pub decimals: u8,
+
+    /// Is `true` if this structure has been initialized
+
+    pub is_initialized: bool,
+
+    /// Optional authority to freeze token accounts.
+
+    pub freeze_authority: COption<Pubkey>,
+
+}
+
+For reference, here is a Solana Explorer link to the USDC Mint Account.
+
+### Token Account
+
+The Token Program creates Token Accounts to track individual ownership of each token unit. A Token Account stores data such as:
+
+- Mint: The token the Token Account holds units of
+
+- Owner: The account authorized to transfer tokens from the Token Account
+
+- Amount: Number of the tokens the Token Account currently holds
+
+Token Account
+
+The full details stored on each Token Account include the following:
+
+Token Account State
+
+pub struct Account {
+
+    /// The mint associated with this account
+
+    pub mint: Pubkey,
+
+    /// The owner of this account.
+
+    pub owner: Pubkey,
+
+    /// The amount of tokens this account holds.
+
+    pub amount: u64,
+
+    /// If `delegate` is `Some` then `delegated_amount` represents
+
+    /// the amount authorized by the delegate
+
+    pub delegate: COption<Pubkey>,
+
+    /// The account's state
+
+    pub state: AccountState,
+
+    /// If is_native.is_some, this is a native token, and the value logs the
+
+    /// rent-exempt reserve. An Account is required to be rent-exempt, so
+
+    /// the value is used by the Processor to ensure that wrapped SOL
+
+    /// accounts do not drop below this threshold.
+
+    pub is_native: COption<u64>,
+
+    /// The amount delegated
+
+    pub delegated_amount: u64,
+
+    /// Optional authority to close the account.
+
+    pub close_authority: COption<Pubkey>,
+
+}
+
+A wallet needs a token account for each token (mint) it wants to hold, with the wallet address set as the token account owner. Each wallet can own multiple token accounts for the same token (mint), but a token account can only have one owner and hold units of one token (mint).
+
+Account Relationship
+
+Note that each Token Account's data includes an owner field identifying who has authority over the Token Account. This differs from the program owner specified in the base Account type, which is the Token Program for all Token Accounts.
+
+### Associated Token Account
+
+Associated Token Accounts simplify the process of finding a token account's address for a specific mint and owner. Think of the Associated Token Account as the "default" token account for a specific mint and owner.
+
+An Associated Token Account is created with an address derived from the owner's address and the mint account's address. It's important to understand that an Associated Token Account is just a token account with a specific address.
+
+Creating an ATA requires a refundable minimum balance for its account storage. The instruction's payer funds that balance even when another wallet owns the ATA.
+
+This introduces a key concept in Solana development: Program Derived Address (PDA). A PDA derives an address deterministically using predefined inputs, making it easy to find the address of an account.
+
+Associated Token Account
+
+Note that each wallet needs its own token account to hold tokens from the same mint.

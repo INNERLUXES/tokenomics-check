@@ -1,0 +1,1167 @@
+{
+  "tool": "tokenomics-check",
+  "version": "1.0.0",
+  "input": {
+    "file": "examples/good/plan.json",
+    "bytes": 1490,
+    "lines": 62
+  },
+  "token": {
+    "name": "Orbit Example",
+    "symbol": "ORBX",
+    "decimals": 18,
+    "chain": "evm",
+    "maxSupply": "1,000,000,000",
+    "totalSupply": "1,000,000,000",
+    "supplyKey": "maxSupply",
+    "mintable": false,
+    "burnable": true,
+    "capMechanism": null,
+    "tradingAtLaunch": true
+  },
+  "summary": {
+    "buckets": 8,
+    "allocated": "1,000,000,000",
+    "ofSupply": "100%",
+    "atLaunch": "138,000,000",
+    "atLaunchOfSupply": "13.8%",
+    "lastRelease": 72
+  },
+  "totals": {
+    "findings": 1,
+    "byLevel": {
+      "error": 0,
+      "warning": 0,
+      "info": 1
+    },
+    "hidden": 0
+  },
+  "rules": [
+    {
+      "id": "plan-unreadable",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-missing",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-unknown",
+      "level": "warning",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-invalid",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "bucket-duplicate",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "percent-out-of-range",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "allocation-sum",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "percent-rounding",
+      "level": "info",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "amount-precision",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "decimals-out-of-range",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "decimals-unusual",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "supply-overflow",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "supply-over-cap",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "mint-cap-missing",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "cliff-over-duration",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "insider-launch-release",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "insider-no-cliff",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "vesting-too-short",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "vesting-too-long",
+      "level": "info",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "schedule-mismatch",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "supply-cliff",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "trading-without-float",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    }
+  ],
+  "config": {
+    "minSeverity": "info",
+    "failOn": "error",
+    "months": null,
+    "cliffShare": "25",
+    "minCliff": 6,
+    "minVesting": 12,
+    "maxVesting": 60
+  },
+  "findings": [
+    {
+      "id": "vesting-too-long",
+      "severity": "info",
+      "message": "The bucket Ecosystem fund still releases at month 72, after month 60 (--max-vesting). This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/good/plan.json",
+      "line": 47,
+      "column": 7,
+      "at": "examples/good/plan.json:47",
+      "bucket": "Ecosystem fund",
+      "fix": "Confirm that the bucket is meant to release for that long, or set --max-vesting to the policy of the project.",
+      "kind": "best practice"
+    }
+  ],
+  "table": {
+    "months": 72,
+    "lastRelease": 72,
+    "supply": "1,000,000,000",
+    "rows": [
+      {
+        "month": 0,
+        "released": "138,000,000",
+        "circulating": "138,000,000",
+        "releasedUnits": "138000000000000000000000000",
+        "circulatingUnits": "138000000000000000000000000",
+        "ofSupply": "13.8%",
+        "from": [
+          "Liquidity",
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 1,
+        "released": "23,458,333.33",
+        "circulating": "161,458,333.33",
+        "releasedUnits": "23458333333333333333333333",
+        "circulatingUnits": "161458333333333333333333333",
+        "ofSupply": "16.14%",
+        "from": [
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 2,
+        "released": "23,458,333.33",
+        "circulating": "184,916,666.66",
+        "releasedUnits": "23458333333333333333333333",
+        "circulatingUnits": "184916666666666666666666666",
+        "ofSupply": "18.49%",
+        "from": [
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 3,
+        "released": "23,458,333.33",
+        "circulating": "208,375,000",
+        "releasedUnits": "23458333333333333333333334",
+        "circulatingUnits": "208375000000000000000000000",
+        "ofSupply": "20.83%",
+        "from": [
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 4,
+        "released": "23,458,333.33",
+        "circulating": "231,833,333.33",
+        "releasedUnits": "23458333333333333333333333",
+        "circulatingUnits": "231833333333333333333333333",
+        "ofSupply": "23.18%",
+        "from": [
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 5,
+        "released": "23,458,333.33",
+        "circulating": "255,291,666.66",
+        "releasedUnits": "23458333333333333333333333",
+        "circulatingUnits": "255291666666666666666666666",
+        "ofSupply": "25.52%",
+        "from": [
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 6,
+        "released": "23,458,333.33",
+        "circulating": "278,750,000",
+        "releasedUnits": "23458333333333333333333334",
+        "circulatingUnits": "278750000000000000000000000",
+        "ofSupply": "27.87%",
+        "from": [
+          "Public sale",
+          "Community rewards",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 7,
+        "released": "16,943,181.81",
+        "circulating": "295,693,181.81",
+        "releasedUnits": "16943181818181818181818180",
+        "circulatingUnits": "295693181818181818181818180",
+        "ofSupply": "29.56%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 8,
+        "released": "16,943,181.81",
+        "circulating": "312,636,363.63",
+        "releasedUnits": "16943181818181818181818182",
+        "circulatingUnits": "312636363636363636363636362",
+        "ofSupply": "31.26%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 9,
+        "released": "16,943,181.81",
+        "circulating": "329,579,545.45",
+        "releasedUnits": "16943181818181818181818183",
+        "circulatingUnits": "329579545454545454545454545",
+        "ofSupply": "32.95%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 10,
+        "released": "16,943,181.81",
+        "circulating": "346,522,727.27",
+        "releasedUnits": "16943181818181818181818181",
+        "circulatingUnits": "346522727272727272727272726",
+        "ofSupply": "34.65%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 11,
+        "released": "16,943,181.81",
+        "circulating": "363,465,909.09",
+        "releasedUnits": "16943181818181818181818182",
+        "circulatingUnits": "363465909090909090909090908",
+        "ofSupply": "36.34%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 12,
+        "released": "31,943,181.81",
+        "circulating": "395,409,090.9",
+        "releasedUnits": "31943181818181818181818182",
+        "circulatingUnits": "395409090909090909090909090",
+        "ofSupply": "39.54%",
+        "from": [
+          "Advisors",
+          "Seed and private investors",
+          "Community rewards",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 13,
+        "released": "22,359,848.48",
+        "circulating": "417,768,939.39",
+        "releasedUnits": "22359848484848484848484847",
+        "circulatingUnits": "417768939393939393939393937",
+        "ofSupply": "41.77%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 14,
+        "released": "22,359,848.48",
+        "circulating": "440,128,787.87",
+        "releasedUnits": "22359848484848484848484849",
+        "circulatingUnits": "440128787878787878787878786",
+        "ofSupply": "44.01%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 15,
+        "released": "22,359,848.48",
+        "circulating": "462,488,636.36",
+        "releasedUnits": "22359848484848484848484850",
+        "circulatingUnits": "462488636363636363636363636",
+        "ofSupply": "46.24%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 16,
+        "released": "22,359,848.48",
+        "circulating": "484,848,484.84",
+        "releasedUnits": "22359848484848484848484847",
+        "circulatingUnits": "484848484848484848484848483",
+        "ofSupply": "48.48%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 17,
+        "released": "22,359,848.48",
+        "circulating": "507,208,333.33",
+        "releasedUnits": "22359848484848484848484849",
+        "circulatingUnits": "507208333333333333333333332",
+        "ofSupply": "50.72%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 18,
+        "released": "22,359,848.48",
+        "circulating": "529,568,181.81",
+        "releasedUnits": "22359848484848484848484849",
+        "circulatingUnits": "529568181818181818181818181",
+        "ofSupply": "52.95%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 19,
+        "released": "22,359,848.48",
+        "circulating": "551,928,030.3",
+        "releasedUnits": "22359848484848484848484847",
+        "circulatingUnits": "551928030303030303030303028",
+        "ofSupply": "55.19%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 20,
+        "released": "22,359,848.48",
+        "circulating": "574,287,878.78",
+        "releasedUnits": "22359848484848484848484849",
+        "circulatingUnits": "574287878787878787878787877",
+        "ofSupply": "57.42%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 21,
+        "released": "22,359,848.48",
+        "circulating": "596,647,727.27",
+        "releasedUnits": "22359848484848484848484850",
+        "circulatingUnits": "596647727272727272727272727",
+        "ofSupply": "59.66%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 22,
+        "released": "22,359,848.48",
+        "circulating": "619,007,575.75",
+        "releasedUnits": "22359848484848484848484847",
+        "circulatingUnits": "619007575757575757575757574",
+        "ofSupply": "61.9%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 23,
+        "released": "22,359,848.48",
+        "circulating": "641,367,424.24",
+        "releasedUnits": "22359848484848484848484848",
+        "circulatingUnits": "641367424242424242424242422",
+        "ofSupply": "64.13%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 24,
+        "released": "22,359,848.48",
+        "circulating": "663,727,272.72",
+        "releasedUnits": "22359848484848484848484850",
+        "circulatingUnits": "663727272727272727272727272",
+        "ofSupply": "66.37%",
+        "from": [
+          "Seed and private investors",
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund",
+          "Advisors"
+        ]
+      },
+      {
+        "month": 25,
+        "released": "14,443,181.81",
+        "circulating": "678,170,454.54",
+        "releasedUnits": "14443181818181818181818181",
+        "circulatingUnits": "678170454545454545454545453",
+        "ofSupply": "67.81%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 26,
+        "released": "14,443,181.81",
+        "circulating": "692,613,636.36",
+        "releasedUnits": "14443181818181818181818182",
+        "circulatingUnits": "692613636363636363636363635",
+        "ofSupply": "69.26%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 27,
+        "released": "14,443,181.81",
+        "circulating": "707,056,818.18",
+        "releasedUnits": "14443181818181818181818183",
+        "circulatingUnits": "707056818181818181818181818",
+        "ofSupply": "70.7%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 28,
+        "released": "14,443,181.81",
+        "circulating": "721,499,999.99",
+        "releasedUnits": "14443181818181818181818181",
+        "circulatingUnits": "721499999999999999999999999",
+        "ofSupply": "72.14%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 29,
+        "released": "14,443,181.81",
+        "circulating": "735,943,181.81",
+        "releasedUnits": "14443181818181818181818181",
+        "circulatingUnits": "735943181818181818181818180",
+        "ofSupply": "73.59%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 30,
+        "released": "14,443,181.81",
+        "circulating": "750,386,363.63",
+        "releasedUnits": "14443181818181818181818183",
+        "circulatingUnits": "750386363636363636363636363",
+        "ofSupply": "75.03%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 31,
+        "released": "14,443,181.81",
+        "circulating": "764,829,545.45",
+        "releasedUnits": "14443181818181818181818181",
+        "circulatingUnits": "764829545454545454545454544",
+        "ofSupply": "76.48%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 32,
+        "released": "14,443,181.81",
+        "circulating": "779,272,727.27",
+        "releasedUnits": "14443181818181818181818182",
+        "circulatingUnits": "779272727272727272727272726",
+        "ofSupply": "77.92%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 33,
+        "released": "14,443,181.81",
+        "circulating": "793,715,909.09",
+        "releasedUnits": "14443181818181818181818183",
+        "circulatingUnits": "793715909090909090909090909",
+        "ofSupply": "79.37%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 34,
+        "released": "14,443,181.81",
+        "circulating": "808,159,090.9",
+        "releasedUnits": "14443181818181818181818180",
+        "circulatingUnits": "808159090909090909090909089",
+        "ofSupply": "80.81%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 35,
+        "released": "14,443,181.81",
+        "circulating": "822,602,272.72",
+        "releasedUnits": "14443181818181818181818182",
+        "circulatingUnits": "822602272727272727272727271",
+        "ofSupply": "82.26%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 36,
+        "released": "14,443,181.81",
+        "circulating": "837,045,454.54",
+        "releasedUnits": "14443181818181818181818183",
+        "circulatingUnits": "837045454545454545454545454",
+        "ofSupply": "83.7%",
+        "from": [
+          "Community rewards",
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 37,
+        "released": "9,943,181.81",
+        "circulating": "846,988,636.36",
+        "releasedUnits": "9943181818181818181818181",
+        "circulatingUnits": "846988636363636363636363635",
+        "ofSupply": "84.69%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 38,
+        "released": "9,943,181.81",
+        "circulating": "856,931,818.18",
+        "releasedUnits": "9943181818181818181818182",
+        "circulatingUnits": "856931818181818181818181817",
+        "ofSupply": "85.69%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 39,
+        "released": "9,943,181.81",
+        "circulating": "866,875,000",
+        "releasedUnits": "9943181818181818181818183",
+        "circulatingUnits": "866875000000000000000000000",
+        "ofSupply": "86.68%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 40,
+        "released": "9,943,181.81",
+        "circulating": "876,818,181.81",
+        "releasedUnits": "9943181818181818181818180",
+        "circulatingUnits": "876818181818181818181818180",
+        "ofSupply": "87.68%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 41,
+        "released": "9,943,181.81",
+        "circulating": "886,761,363.63",
+        "releasedUnits": "9943181818181818181818182",
+        "circulatingUnits": "886761363636363636363636362",
+        "ofSupply": "88.67%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 42,
+        "released": "9,943,181.81",
+        "circulating": "896,704,545.45",
+        "releasedUnits": "9943181818181818181818183",
+        "circulatingUnits": "896704545454545454545454545",
+        "ofSupply": "89.67%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 43,
+        "released": "9,943,181.81",
+        "circulating": "906,647,727.27",
+        "releasedUnits": "9943181818181818181818181",
+        "circulatingUnits": "906647727272727272727272726",
+        "ofSupply": "90.66%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 44,
+        "released": "9,943,181.81",
+        "circulating": "916,590,909.09",
+        "releasedUnits": "9943181818181818181818182",
+        "circulatingUnits": "916590909090909090909090908",
+        "ofSupply": "91.65%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 45,
+        "released": "9,943,181.81",
+        "circulating": "926,534,090.9",
+        "releasedUnits": "9943181818181818181818182",
+        "circulatingUnits": "926534090909090909090909090",
+        "ofSupply": "92.65%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 46,
+        "released": "9,943,181.81",
+        "circulating": "936,477,272.72",
+        "releasedUnits": "9943181818181818181818181",
+        "circulatingUnits": "936477272727272727272727271",
+        "ofSupply": "93.64%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 47,
+        "released": "9,943,181.81",
+        "circulating": "946,420,454.54",
+        "releasedUnits": "9943181818181818181818182",
+        "circulatingUnits": "946420454545454545454545453",
+        "ofSupply": "94.64%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 48,
+        "released": "9,943,181.81",
+        "circulating": "956,363,636.36",
+        "releasedUnits": "9943181818181818181818183",
+        "circulatingUnits": "956363636363636363636363636",
+        "ofSupply": "95.63%",
+        "from": [
+          "Team",
+          "Treasury",
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 49,
+        "released": "1,818,181.81",
+        "circulating": "958,181,818.18",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "958181818181818181818181818",
+        "ofSupply": "95.81%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 50,
+        "released": "1,818,181.81",
+        "circulating": "960,000,000",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "960000000000000000000000000",
+        "ofSupply": "96%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 51,
+        "released": "1,818,181.81",
+        "circulating": "961,818,181.81",
+        "releasedUnits": "1818181818181818181818181",
+        "circulatingUnits": "961818181818181818181818181",
+        "ofSupply": "96.18%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 52,
+        "released": "1,818,181.81",
+        "circulating": "963,636,363.63",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "963636363636363636363636363",
+        "ofSupply": "96.36%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 53,
+        "released": "1,818,181.81",
+        "circulating": "965,454,545.45",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "965454545454545454545454545",
+        "ofSupply": "96.54%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 54,
+        "released": "1,818,181.81",
+        "circulating": "967,272,727.27",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "967272727272727272727272727",
+        "ofSupply": "96.72%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 55,
+        "released": "1,818,181.81",
+        "circulating": "969,090,909.09",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "969090909090909090909090909",
+        "ofSupply": "96.9%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 56,
+        "released": "1,818,181.81",
+        "circulating": "970,909,090.9",
+        "releasedUnits": "1818181818181818181818181",
+        "circulatingUnits": "970909090909090909090909090",
+        "ofSupply": "97.09%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 57,
+        "released": "1,818,181.81",
+        "circulating": "972,727,272.72",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "972727272727272727272727272",
+        "ofSupply": "97.27%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 58,
+        "released": "1,818,181.81",
+        "circulating": "974,545,454.54",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "974545454545454545454545454",
+        "ofSupply": "97.45%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 59,
+        "released": "1,818,181.81",
+        "circulating": "976,363,636.36",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "976363636363636363636363636",
+        "ofSupply": "97.63%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 60,
+        "released": "1,818,181.81",
+        "circulating": "978,181,818.18",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "978181818181818181818181818",
+        "ofSupply": "97.81%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 61,
+        "released": "1,818,181.81",
+        "circulating": "980,000,000",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "980000000000000000000000000",
+        "ofSupply": "98%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 62,
+        "released": "1,818,181.81",
+        "circulating": "981,818,181.81",
+        "releasedUnits": "1818181818181818181818181",
+        "circulatingUnits": "981818181818181818181818181",
+        "ofSupply": "98.18%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 63,
+        "released": "1,818,181.81",
+        "circulating": "983,636,363.63",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "983636363636363636363636363",
+        "ofSupply": "98.36%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 64,
+        "released": "1,818,181.81",
+        "circulating": "985,454,545.45",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "985454545454545454545454545",
+        "ofSupply": "98.54%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 65,
+        "released": "1,818,181.81",
+        "circulating": "987,272,727.27",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "987272727272727272727272727",
+        "ofSupply": "98.72%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 66,
+        "released": "1,818,181.81",
+        "circulating": "989,090,909.09",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "989090909090909090909090909",
+        "ofSupply": "98.9%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 67,
+        "released": "1,818,181.81",
+        "circulating": "990,909,090.9",
+        "releasedUnits": "1818181818181818181818181",
+        "circulatingUnits": "990909090909090909090909090",
+        "ofSupply": "99.09%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 68,
+        "released": "1,818,181.81",
+        "circulating": "992,727,272.72",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "992727272727272727272727272",
+        "ofSupply": "99.27%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 69,
+        "released": "1,818,181.81",
+        "circulating": "994,545,454.54",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "994545454545454545454545454",
+        "ofSupply": "99.45%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 70,
+        "released": "1,818,181.81",
+        "circulating": "996,363,636.36",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "996363636363636363636363636",
+        "ofSupply": "99.63%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 71,
+        "released": "1,818,181.81",
+        "circulating": "998,181,818.18",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "998181818181818181818181818",
+        "ofSupply": "99.81%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      },
+      {
+        "month": 72,
+        "released": "1,818,181.81",
+        "circulating": "1,000,000,000",
+        "releasedUnits": "1818181818181818181818182",
+        "circulatingUnits": "1000000000000000000000000000",
+        "ofSupply": "100%",
+        "from": [
+          "Ecosystem fund"
+        ]
+      }
+    ]
+  },
+  "notes": [],
+  "notice": "This report is an input to a review before the token is deployed: not financial, legal or investment advice and not a guarantee that the plan is sound.",
+  "result": {
+    "pass": true,
+    "failOn": "error",
+    "text": "PASS - no finding at or above error (1 info)"
+  }
+}

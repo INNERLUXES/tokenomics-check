@@ -1,0 +1,62 @@
+{
+  "name": "Orbit Example",
+  "symbol": "ORBX",
+  "decimals": 18,
+  "chain": "evm",
+  "maxSupply": "1000000000",
+  "totalSupply": "1000000000",
+  "mintable": false,
+  "burnable": true,
+  "tradingAtLaunch": true,
+  "notes": "A made-up plan for the examples of tokenomics-check.",
+  "allocations": [
+    {
+      "name": "Team",
+      "kind": "team",
+      "percent": 15,
+      "vesting": { "cliffMonths": 12, "linearMonths": 36 }
+    },
+    {
+      "name": "Seed and private investors",
+      "kind": "investors",
+      "percent": 12,
+      "vesting": { "cliffMonths": 6, "linearMonths": 18 }
+    },
+    {
+      "name": "Advisors",
+      "kind": "advisors",
+      "percent": 3,
+      "vesting": { "cliffMonths": 12, "durationMonths": 24 }
+    },
+    {
+      "name": "Treasury",
+      "kind": "treasury",
+      "percent": 20,
+      "vesting": { "launchPercent": 5, "linearMonths": 48 }
+    },
+    {
+      "name": "Community rewards",
+      "kind": "rewards",
+      "percent": 18,
+      "vesting": { "launchPercent": 10, "linearMonths": 36 }
+    },
+    {
+      "name": "Ecosystem fund",
+      "kind": "ecosystem",
+      "percent": 12,
+      "vesting": { "startMonth": 6, "linearMonths": 66 }
+    },
+    {
+      "name": "Liquidity",
+      "kind": "liquidity",
+      "percent": 8,
+      "vesting": { "launchPercent": 100 }
+    },
+    {
+      "name": "Public sale",
+      "kind": "public-sale",
+      "amount": "120000000",
+      "vesting": { "launchPercent": 25, "linearMonths": 6 }
+    }
+  ]
+}

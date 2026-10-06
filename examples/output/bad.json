@@ -1,0 +1,1449 @@
+{
+  "tool": "tokenomics-check",
+  "version": "1.0.0",
+  "input": {
+    "file": "examples/bad/plan.json",
+    "bytes": 1765,
+    "lines": 78
+  },
+  "token": {
+    "name": "Quickfire Example",
+    "symbol": "QFX",
+    "decimals": 2,
+    "chain": "evm",
+    "maxSupply": "21,212,121",
+    "totalSupply": "25,000,000",
+    "supplyKey": "maxSupply",
+    "mintable": true,
+    "burnable": false,
+    "capMechanism": null,
+    "tradingAtLaunch": true
+  },
+  "summary": {
+    "buckets": 10,
+    "allocated": "16,318,181.79",
+    "ofSupply": "76.92%",
+    "atLaunch": "1,272,727.26",
+    "atLaunchOfSupply": "6%",
+    "lastRelease": 72
+  },
+  "totals": {
+    "findings": 22,
+    "byLevel": {
+      "error": 11,
+      "warning": 9,
+      "info": 2
+    },
+    "hidden": 0
+  },
+  "rules": [
+    {
+      "id": "plan-unreadable",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-missing",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "field-unknown",
+      "level": "warning",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "field-invalid",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "bucket-duplicate",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "percent-out-of-range",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "allocation-sum",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "percent-rounding",
+      "level": "info",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "amount-precision",
+      "level": "error",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "decimals-out-of-range",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "decimals-unusual",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "supply-overflow",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "supply-over-cap",
+      "level": "error",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "mint-cap-missing",
+      "level": "error",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "cliff-over-duration",
+      "level": "error",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "insider-launch-release",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "insider-no-cliff",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "vesting-too-short",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 2
+    },
+    {
+      "id": "vesting-too-long",
+      "level": "info",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "schedule-mismatch",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 2
+    },
+    {
+      "id": "supply-cliff",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 3
+    },
+    {
+      "id": "trading-without-float",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 1
+    }
+  ],
+  "config": {
+    "minSeverity": "info",
+    "failOn": "error",
+    "months": null,
+    "cliffShare": "25",
+    "minCliff": 6,
+    "minVesting": 12,
+    "maxVesting": 60
+  },
+  "findings": [
+    {
+      "id": "supply-over-cap",
+      "severity": "error",
+      "message": "The total supply of 25,000,000 QFX is larger than the maximum supply of 21,212,121 QFX; a cap such as ERC20Capped at the maximum refuses a mint past it with ERC20ExceededCap.",
+      "file": "examples/bad/plan.json",
+      "line": 7,
+      "column": 3,
+      "at": "examples/bad/plan.json:7",
+      "bucket": null,
+      "fix": "Lower the total supply to the maximum, or raise the maximum.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "ERC20Capped fixes a cap on the total supply once, in its constructor, and a mint that would take the supply over the cap fails with the error ERC20ExceededCap.",
+          "source": "ERC-20 API reference (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/token/erc20"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "mint-cap-missing",
+      "severity": "error",
+      "message": "The token is mintable and states a maximum supply of 21,212,121 QFX, but capMechanism names nothing that enforces it, such as ERC20Capped or a cap check in the mint function; while a mint can go on, the maximum is only a promise.",
+      "file": "examples/bad/plan.json",
+      "line": 8,
+      "column": 3,
+      "at": "examples/bad/plan.json:8",
+      "bucket": null,
+      "fix": "Name the mechanism in capMechanism (ERC20Capped, a cap check in the mint function, a mint authority set to None after the last mint), or make the token not mintable.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "ERC20Capped fixes a cap on the total supply once, in its constructor, and a mint that would take the supply over the cap fails with the error ERC20ExceededCap.",
+          "source": "ERC-20 API reference (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/token/erc20"
+        },
+        {
+          "text": "As long as a mint holds a mint authority, that authority may mint more at any time; SetAuthority can set it to None, and from then on the supply can never grow.",
+          "source": "Token program (Solana Program Library documentation)",
+          "url": "https://www.solana-program.com/docs/token"
+        },
+        {
+          "text": "A Solana mint account keeps the supply as a u64 and the decimals as a u8, with an optional mint authority; a mint without one has a fixed supply.",
+          "source": "Assets on Solana: mint accounts and token accounts (Solana documentation)",
+          "url": "https://solana.com/docs/tokens"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "allocation-sum",
+      "severity": "error",
+      "message": "The 10 buckets add up to 16,318,181.79 QFX, 76.92% of the maxSupply of 21,212,121 QFX: 4,893,939.21 QFX less than the supply. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 12,
+      "column": 3,
+      "at": "examples/bad/plan.json:12",
+      "bucket": null,
+      "fix": "Change the buckets until they add up to the supply exactly, or change the supply.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "ERC-20 reports the total supply, every balance and every transfer value as a uint256, an unsigned whole number in the smallest unit of the token.",
+          "source": "ERC-20: Token Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-20"
+        },
+        {
+          "text": "ERC20Capped fixes a cap on the total supply once, in its constructor, and a mint that would take the supply over the cap fails with the error ERC20ExceededCap.",
+          "source": "ERC-20 API reference (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/token/erc20"
+        }
+      ],
+      "own": "requiring the buckets to add up to the supply exactly is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the pages define the total supply and the cap, not how a plan divides them"
+    },
+    {
+      "id": "cliff-over-duration",
+      "severity": "error",
+      "message": "The bucket Advisors has a cliff of 9 months and a duration of 6 months; VestingWalletCliff refuses a cliff longer than its duration with InvalidCliffDuration. The table releases the rest at the end of the cliff.",
+      "file": "examples/bad/plan.json",
+      "line": 23,
+      "column": 20,
+      "at": "examples/bad/plan.json:23",
+      "bucket": "Advisors",
+      "fix": "Make the cliff no longer than the duration, or give the months after the cliff with linearMonths.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "VestingWalletCliff refuses a cliff longer than the duration of the schedule with the error InvalidCliffDuration.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        },
+        {
+          "text": "VestingWalletCliff adds a cliff that begins with the schedule: until the cliff has passed nothing is vested, and after it the amount is what the inherited linear schedule gives.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "amount-precision",
+      "severity": "error",
+      "message": "The amount of bucket Ecosystem is 2000000.125, with 3 places after the point, but the token has 2 decimals: an amount is held as a whole number of base units, so it would be cut to 2,000,000.12.",
+      "file": "examples/bad/plan.json",
+      "line": 40,
+      "column": 7,
+      "at": "examples/bad/plan.json:40",
+      "bucket": null,
+      "fix": "Round the amount to the decimals of the token, or raise the decimals.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "The EVM works with whole numbers only, so a contract keeps every amount as a count of the smallest unit, and decimals changes nothing but how a wallet shows it.",
+          "source": "ERC-20 (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/erc20"
+        },
+        {
+          "text": "ERC-20 lets a token report its decimals as a uint8, and a wallet divides the stored whole-number amount by ten to that power to show it; the function is optional.",
+          "source": "ERC-20: Token Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-20"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "percent-out-of-range",
+      "severity": "error",
+      "message": "The launchPercent of the vesting of bucket Ecosystem is 150, outside 0 to 100.",
+      "file": "examples/bad/plan.json",
+      "line": 41,
+      "column": 20,
+      "at": "examples/bad/plan.json:41",
+      "bucket": null,
+      "fix": "Give each percent as a number from 0 to 100.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "schedule-mismatch",
+      "severity": "error",
+      "message": "The schedule of bucket Public sale releases 2,333,333.31 QFX, more than the 2,121,212.1 QFX the bucket holds. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 54,
+      "column": 9,
+      "at": "examples/bad/plan.json:54",
+      "bucket": "Public sale",
+      "fix": "Make the steps of the schedule add up to the bucket exactly, or add linearMonths or durationMonths for the part after launch.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWallet hands tokens to a beneficiary on a schedule set by a start time and a duration, along a linear curve by default; a duration of zero turns it into a timelock that opens at the start.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "requiring every schedule to release its bucket exactly is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; a vesting wallet releases only what it holds, so a plan that promises more, or less, is the plan's own error"
+    },
+    {
+      "id": "field-invalid",
+      "severity": "error",
+      "message": "The kind of bucket Marketing is \"marketing\"; it must be one of team, insiders, advisors, investors, treasury, reserve, community, ecosystem, rewards, airdrop, liquidity, public-sale, other. The insider checks did not look at this bucket.",
+      "file": "examples/bad/plan.json",
+      "line": 62,
+      "column": 7,
+      "at": "examples/bad/plan.json:62",
+      "bucket": "Marketing",
+      "fix": "Write the value as docs/inputs.md shows: amounts and supplies as decimal numbers of whole tokens, months as whole numbers, flags as true or false.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "schedule-mismatch",
+      "severity": "error",
+      "message": "The bucket Marketing holds 1,060,606.05 QFX, but it gives launchPercent 20% and no linearMonths, durationMonths or schedule for the rest, so 848,484.84 QFX is never released. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 64,
+      "column": 7,
+      "at": "examples/bad/plan.json:64",
+      "bucket": "Marketing",
+      "fix": "Make the steps of the schedule add up to the bucket exactly, or add linearMonths or durationMonths for the part after launch.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWallet hands tokens to a beneficiary on a schedule set by a start time and a duration, along a linear curve by default; a duration of zero turns it into a timelock that opens at the start.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "requiring every schedule to release its bucket exactly is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; a vesting wallet releases only what it holds, so a plan that promises more, or less, is the plan's own error"
+    },
+    {
+      "id": "bucket-duplicate",
+      "severity": "error",
+      "message": "Bucket 9 is named TEAM, as is bucket 1 at line 13; a total cannot be traced to one of them.",
+      "file": "examples/bad/plan.json",
+      "line": 67,
+      "column": 7,
+      "at": "examples/bad/plan.json:67",
+      "bucket": "TEAM",
+      "fix": "Give each bucket a name of its own, or merge the two.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "field-missing",
+      "severity": "error",
+      "message": "The bucket Partners has no vesting; give one, such as {\"launchPercent\": 100} for a bucket released whole at launch.",
+      "file": "examples/bad/plan.json",
+      "line": 72,
+      "column": 5,
+      "at": "examples/bad/plan.json:72",
+      "bucket": "Partners",
+      "fix": "Add the field named; docs/inputs.md lists what each part of the plan needs.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "trading-without-float",
+      "severity": "warning",
+      "message": "Trading starts at launch, but Liquidity and Public sale release nothing at launch, so there is nothing to trade or to pool. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 10,
+      "column": 3,
+      "at": "examples/bad/plan.json:10",
+      "bucket": null,
+      "fix": "Add a liquidity or public sale bucket with a part released at launch, or set tradingAtLaunch to false.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "asking for a liquidity or public sale part at launch when trading starts then is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the pages do not cover markets"
+    },
+    {
+      "id": "insider-no-cliff",
+      "severity": "warning",
+      "message": "The bucket Team (team) releases 636,363.63 QFX at month 1, before month 6 (--min-cliff); its cliff ends at month 0. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 17,
+      "column": 7,
+      "at": "examples/bad/plan.json:17",
+      "bucket": "Team",
+      "fix": "Give the bucket a cliff of at least the months of --min-cliff, or set --min-cliff to the policy of the project.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWalletCliff adds a cliff that begins with the schedule: until the cliff has passed nothing is vested, and after it the amount is what the inherited linear schedule gives.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a cliff of at least --min-cliff months for insiders is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 6 months is the tool's own choice"
+    },
+    {
+      "id": "vesting-too-short",
+      "severity": "warning",
+      "message": "The bucket Team (team) is fully released by month 6, before month 12 (--min-vesting). This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 17,
+      "column": 7,
+      "at": "examples/bad/plan.json:17",
+      "bucket": "Team",
+      "fix": "Spread the bucket over at least the months of --min-vesting, or set --min-vesting to the policy of the project.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWallet hands tokens to a beneficiary on a schedule set by a start time and a duration, along a linear curve by default; a duration of zero turns it into a timelock that opens at the start.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a release of at least --min-vesting months for insiders is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 12 months is the tool's own choice"
+    },
+    {
+      "id": "insider-launch-release",
+      "severity": "warning",
+      "message": "The bucket Team (team) releases 424,242.42 QFX, 10% of the bucket, at launch; insiders who can sell on the first day weigh on the price before the market has formed. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 17,
+      "column": 20,
+      "at": "examples/bad/plan.json:17",
+      "bucket": "Team",
+      "fix": "Release nothing to insiders at launch; start their schedule after a cliff.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWallet hands tokens to a beneficiary on a schedule set by a start time and a duration, along a linear curve by default; a duration of zero turns it into a timelock that opens at the start.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "holding back every insider bucket at launch is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; a vesting wallet can release from its start"
+    },
+    {
+      "id": "vesting-too-short",
+      "severity": "warning",
+      "message": "The bucket Advisors (advisors) is fully released by month 9, before month 12 (--min-vesting). This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 23,
+      "column": 7,
+      "at": "examples/bad/plan.json:23",
+      "bucket": "Advisors",
+      "fix": "Spread the bucket over at least the months of --min-vesting, or set --min-vesting to the policy of the project.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWallet hands tokens to a beneficiary on a schedule set by a start time and a duration, along a linear curve by default; a duration of zero turns it into a timelock that opens at the start.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a release of at least --min-vesting months for insiders is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 12 months is the tool's own choice"
+    },
+    {
+      "id": "supply-cliff",
+      "severity": "warning",
+      "message": "Month 12 releases 3,203,914.11 QFX, 36.7% of the 8,727,903.95 QFX in circulation before it, more than the 25% of --cliff-share: Seed investors 3,181,818.15 QFX and Treasury 22,095.96 QFX. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 29,
+      "column": 7,
+      "at": "examples/bad/plan.json:29",
+      "bucket": "Seed investors",
+      "fix": "Spread the release over more months, stagger the cliffs of the buckets, or confirm that the market can take the release.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWalletCliff adds a cliff that begins with the schedule: until the cliff has passed nothing is vested, and after it the amount is what the inherited linear schedule gives.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a share of --cliff-share percent of the circulating supply in one month is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 25 percent is the tool's own choice"
+    },
+    {
+      "id": "supply-cliff",
+      "severity": "warning",
+      "message": "Month 1 releases 1,719,065.63 QFX, 135.06% of the 1,272,727.26 QFX in circulation before it, more than the 25% of --cliff-share: Public sale 1,060,606.05 QFX, Team 636,363.63 QFX and Treasury 22,095.95 QFX. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 53,
+      "column": 7,
+      "at": "examples/bad/plan.json:53",
+      "bucket": "Public sale",
+      "fix": "Spread the release over more months, stagger the cliffs of the buckets, or confirm that the market can take the release.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWalletCliff adds a cliff that begins with the schedule: until the cliff has passed nothing is vested, and after it the amount is what the inherited linear schedule gives.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a share of --cliff-share percent of the circulating supply in one month is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 25 percent is the tool's own choice"
+    },
+    {
+      "id": "supply-cliff",
+      "severity": "warning",
+      "message": "Month 2 releases 1,931,186.85 QFX, 64.54% of the 2,991,792.89 QFX in circulation before it, more than the 25% of --cliff-share: Public sale 1,272,727.26 QFX, Team 636,363.63 QFX and Treasury 22,095.96 QFX. This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 53,
+      "column": 7,
+      "at": "examples/bad/plan.json:53",
+      "bucket": "Public sale",
+      "fix": "Spread the release over more months, stagger the cliffs of the buckets, or confirm that the market can take the release.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWalletCliff adds a cliff that begins with the schedule: until the cliff has passed nothing is vested, and after it the amount is what the inherited linear schedule gives.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a share of --cliff-share percent of the circulating supply in one month is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 25 percent is the tool's own choice"
+    },
+    {
+      "id": "field-unknown",
+      "severity": "warning",
+      "message": "The key \"cliff\" of the vesting of bucket TEAM is not one the tool reads, so its value was left out of every check. Did you mean \"cliffMonths\"? The keys of the vesting of bucket TEAM are startMonth, cliffMonths, launchPercent, linearMonths, durationMonths, schedule.",
+      "file": "examples/bad/plan.json",
+      "line": 70,
+      "column": 42,
+      "at": "examples/bad/plan.json:70",
+      "bucket": null,
+      "fix": "Correct the spelling to a key of docs/inputs.md, or remove the key.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "percent-rounding",
+      "severity": "info",
+      "message": "7.5% of the supply of 21,212,121 QFX is not a whole number of base units at 2 decimals, so the bucket Treasury holds 1,590,909.07 and less than one base unit is in no bucket.",
+      "file": "examples/bad/plan.json",
+      "line": 34,
+      "column": 7,
+      "at": "examples/bad/plan.json:34",
+      "bucket": "Treasury",
+      "fix": "Give the bucket as an amount, or choose a percent that gives whole base units.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "The EVM works with whole numbers only, so a contract keeps every amount as a count of the smallest unit, and decimals changes nothing but how a wallet shows it.",
+          "source": "ERC-20 (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/erc20"
+        },
+        {
+          "text": "ERC-20 lets a token report its decimals as a uint8, and a wallet divides the stored whole-number amount by ten to that power to show it; the function is optional.",
+          "source": "ERC-20: Token Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-20"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "vesting-too-long",
+      "severity": "info",
+      "message": "The bucket Treasury still releases at month 72, after month 60 (--max-vesting). This is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation.",
+      "file": "examples/bad/plan.json",
+      "line": 35,
+      "column": 7,
+      "at": "examples/bad/plan.json:35",
+      "bucket": "Treasury",
+      "fix": "Confirm that the bucket is meant to release for that long, or set --max-vesting to the policy of the project.",
+      "kind": "best practice",
+      "basis": [
+        {
+          "text": "VestingWallet hands tokens to a beneficiary on a schedule set by a start time and a duration, along a linear curve by default; a duration of zero turns it into a timelock that opens at the start.",
+          "source": "Finance API reference, VestingWallet and VestingWalletCliff (OpenZeppelin Contracts documentation)",
+          "url": "https://docs.openzeppelin.com/contracts/5.x/api/finance"
+        }
+      ],
+      "own": "a note past --max-vesting months is a best practice of this tool, not a rule in EIP-20, the OpenZeppelin Contracts documentation or the Solana documentation; the default of 60 months is the tool's own choice"
+    }
+  ],
+  "table": {
+    "months": 72,
+    "lastRelease": 72,
+    "supply": "21,212,121",
+    "rows": [
+      {
+        "month": 0,
+        "released": "1,272,727.26",
+        "circulating": "1,272,727.26",
+        "releasedUnits": "127272726",
+        "circulatingUnits": "127272726",
+        "ofSupply": "6%",
+        "from": [
+          "TEAM",
+          "Team",
+          "Marketing"
+        ]
+      },
+      {
+        "month": 1,
+        "released": "1,719,065.63",
+        "circulating": "2,991,792.89",
+        "releasedUnits": "171906563",
+        "circulatingUnits": "299179289",
+        "ofSupply": "14.1%",
+        "from": [
+          "Public sale",
+          "Team",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 2,
+        "released": "1,931,186.85",
+        "circulating": "4,922,979.74",
+        "releasedUnits": "193118685",
+        "circulatingUnits": "492297974",
+        "ofSupply": "23.2%",
+        "from": [
+          "Public sale",
+          "Team",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 3,
+        "released": "658,459.59",
+        "circulating": "5,581,439.33",
+        "releasedUnits": "65845959",
+        "circulatingUnits": "558143933",
+        "ofSupply": "26.31%",
+        "from": [
+          "Team",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 4,
+        "released": "658,459.59",
+        "circulating": "6,239,898.92",
+        "releasedUnits": "65845959",
+        "circulatingUnits": "623989892",
+        "ofSupply": "29.41%",
+        "from": [
+          "Team",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 5,
+        "released": "658,459.59",
+        "circulating": "6,898,358.51",
+        "releasedUnits": "65845959",
+        "circulatingUnits": "689835851",
+        "ofSupply": "32.52%",
+        "from": [
+          "Team",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 6,
+        "released": "658,459.59",
+        "circulating": "7,556,818.1",
+        "releasedUnits": "65845959",
+        "circulatingUnits": "755681810",
+        "ofSupply": "35.62%",
+        "from": [
+          "Team",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 7,
+        "released": "22,095.96",
+        "circulating": "7,578,914.06",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "757891406",
+        "ofSupply": "35.72%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 8,
+        "released": "22,095.96",
+        "circulating": "7,601,010.02",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "760101002",
+        "ofSupply": "35.83%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 9,
+        "released": "1,082,702.01",
+        "circulating": "8,683,712.03",
+        "releasedUnits": "108270201",
+        "circulatingUnits": "868371203",
+        "ofSupply": "40.93%",
+        "from": [
+          "Advisors",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 10,
+        "released": "22,095.96",
+        "circulating": "8,705,807.99",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "870580799",
+        "ofSupply": "41.04%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 11,
+        "released": "22,095.96",
+        "circulating": "8,727,903.95",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "872790395",
+        "ofSupply": "41.14%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 12,
+        "released": "3,203,914.11",
+        "circulating": "11,931,818.06",
+        "releasedUnits": "320391411",
+        "circulatingUnits": "1193181806",
+        "ofSupply": "56.24%",
+        "from": [
+          "Seed investors",
+          "Treasury"
+        ]
+      },
+      {
+        "month": 13,
+        "released": "22,095.96",
+        "circulating": "11,953,914.02",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1195391402",
+        "ofSupply": "56.35%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 14,
+        "released": "22,095.96",
+        "circulating": "11,976,009.98",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1197600998",
+        "ofSupply": "56.45%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 15,
+        "released": "22,095.95",
+        "circulating": "11,998,105.93",
+        "releasedUnits": "2209595",
+        "circulatingUnits": "1199810593",
+        "ofSupply": "56.56%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 16,
+        "released": "22,095.96",
+        "circulating": "12,020,201.89",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1202020189",
+        "ofSupply": "56.66%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 17,
+        "released": "22,095.96",
+        "circulating": "12,042,297.85",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1204229785",
+        "ofSupply": "56.77%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 18,
+        "released": "22,095.96",
+        "circulating": "12,064,393.81",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1206439381",
+        "ofSupply": "56.87%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 19,
+        "released": "22,095.96",
+        "circulating": "12,086,489.77",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1208648977",
+        "ofSupply": "56.97%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 20,
+        "released": "22,095.96",
+        "circulating": "12,108,585.73",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1210858573",
+        "ofSupply": "57.08%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 21,
+        "released": "22,095.96",
+        "circulating": "12,130,681.69",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1213068169",
+        "ofSupply": "57.18%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 22,
+        "released": "22,095.96",
+        "circulating": "12,152,777.65",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1215277765",
+        "ofSupply": "57.29%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 23,
+        "released": "22,095.96",
+        "circulating": "12,174,873.61",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1217487361",
+        "ofSupply": "57.39%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 24,
+        "released": "22,095.96",
+        "circulating": "12,196,969.57",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1219696957",
+        "ofSupply": "57.49%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 25,
+        "released": "22,095.96",
+        "circulating": "12,219,065.53",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1221906553",
+        "ofSupply": "57.6%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 26,
+        "released": "22,095.96",
+        "circulating": "12,241,161.49",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1224116149",
+        "ofSupply": "57.7%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 27,
+        "released": "22,095.96",
+        "circulating": "12,263,257.45",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1226325745",
+        "ofSupply": "57.81%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 28,
+        "released": "22,095.96",
+        "circulating": "12,285,353.41",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1228535341",
+        "ofSupply": "57.91%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 29,
+        "released": "22,095.95",
+        "circulating": "12,307,449.36",
+        "releasedUnits": "2209595",
+        "circulatingUnits": "1230744936",
+        "ofSupply": "58.02%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 30,
+        "released": "22,095.96",
+        "circulating": "12,329,545.32",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1232954532",
+        "ofSupply": "58.12%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 31,
+        "released": "22,095.96",
+        "circulating": "12,351,641.28",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1235164128",
+        "ofSupply": "58.22%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 32,
+        "released": "22,095.96",
+        "circulating": "12,373,737.24",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1237373724",
+        "ofSupply": "58.33%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 33,
+        "released": "22,095.96",
+        "circulating": "12,395,833.2",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1239583320",
+        "ofSupply": "58.43%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 34,
+        "released": "22,095.96",
+        "circulating": "12,417,929.16",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1241792916",
+        "ofSupply": "58.54%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 35,
+        "released": "22,095.96",
+        "circulating": "12,440,025.12",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1244002512",
+        "ofSupply": "58.64%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 36,
+        "released": "22,095.96",
+        "circulating": "12,462,121.08",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1246212108",
+        "ofSupply": "58.74%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 37,
+        "released": "22,095.96",
+        "circulating": "12,484,217.04",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1248421704",
+        "ofSupply": "58.85%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 38,
+        "released": "22,095.96",
+        "circulating": "12,506,313",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1250631300",
+        "ofSupply": "58.95%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 39,
+        "released": "22,095.96",
+        "circulating": "12,528,408.96",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1252840896",
+        "ofSupply": "59.06%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 40,
+        "released": "22,095.96",
+        "circulating": "12,550,504.92",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1255050492",
+        "ofSupply": "59.16%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 41,
+        "released": "22,095.96",
+        "circulating": "12,572,600.88",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1257260088",
+        "ofSupply": "59.27%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 42,
+        "released": "22,095.96",
+        "circulating": "12,594,696.84",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1259469684",
+        "ofSupply": "59.37%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 43,
+        "released": "22,095.96",
+        "circulating": "12,616,792.8",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1261679280",
+        "ofSupply": "59.47%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 44,
+        "released": "22,095.95",
+        "circulating": "12,638,888.75",
+        "releasedUnits": "2209595",
+        "circulatingUnits": "1263888875",
+        "ofSupply": "59.58%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 45,
+        "released": "22,095.96",
+        "circulating": "12,660,984.71",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1266098471",
+        "ofSupply": "59.68%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 46,
+        "released": "22,095.96",
+        "circulating": "12,683,080.67",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1268308067",
+        "ofSupply": "59.79%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 47,
+        "released": "22,095.96",
+        "circulating": "12,705,176.63",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1270517663",
+        "ofSupply": "59.89%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 48,
+        "released": "22,095.96",
+        "circulating": "12,727,272.59",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1272727259",
+        "ofSupply": "59.99%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 49,
+        "released": "22,095.96",
+        "circulating": "12,749,368.55",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1274936855",
+        "ofSupply": "60.1%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 50,
+        "released": "22,095.96",
+        "circulating": "12,771,464.51",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1277146451",
+        "ofSupply": "60.2%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 51,
+        "released": "22,095.96",
+        "circulating": "12,793,560.47",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1279356047",
+        "ofSupply": "60.31%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 52,
+        "released": "22,095.96",
+        "circulating": "12,815,656.43",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1281565643",
+        "ofSupply": "60.41%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 53,
+        "released": "22,095.96",
+        "circulating": "12,837,752.39",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1283775239",
+        "ofSupply": "60.52%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 54,
+        "released": "22,095.96",
+        "circulating": "12,859,848.35",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1285984835",
+        "ofSupply": "60.62%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 55,
+        "released": "22,095.96",
+        "circulating": "12,881,944.31",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1288194431",
+        "ofSupply": "60.72%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 56,
+        "released": "22,095.96",
+        "circulating": "12,904,040.27",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1290404027",
+        "ofSupply": "60.83%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 57,
+        "released": "22,095.96",
+        "circulating": "12,926,136.23",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1292613623",
+        "ofSupply": "60.93%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 58,
+        "released": "22,095.95",
+        "circulating": "12,948,232.18",
+        "releasedUnits": "2209595",
+        "circulatingUnits": "1294823218",
+        "ofSupply": "61.04%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 59,
+        "released": "22,095.96",
+        "circulating": "12,970,328.14",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1297032814",
+        "ofSupply": "61.14%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 60,
+        "released": "22,095.96",
+        "circulating": "12,992,424.1",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1299242410",
+        "ofSupply": "61.24%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 61,
+        "released": "22,095.96",
+        "circulating": "13,014,520.06",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1301452006",
+        "ofSupply": "61.35%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 62,
+        "released": "22,095.96",
+        "circulating": "13,036,616.02",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1303661602",
+        "ofSupply": "61.45%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 63,
+        "released": "22,095.96",
+        "circulating": "13,058,711.98",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1305871198",
+        "ofSupply": "61.56%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 64,
+        "released": "22,095.96",
+        "circulating": "13,080,807.94",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1308080794",
+        "ofSupply": "61.66%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 65,
+        "released": "22,095.96",
+        "circulating": "13,102,903.9",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1310290390",
+        "ofSupply": "61.77%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 66,
+        "released": "22,095.96",
+        "circulating": "13,124,999.86",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1312499986",
+        "ofSupply": "61.87%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 67,
+        "released": "22,095.96",
+        "circulating": "13,147,095.82",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1314709582",
+        "ofSupply": "61.97%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 68,
+        "released": "22,095.96",
+        "circulating": "13,169,191.78",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1316919178",
+        "ofSupply": "62.08%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 69,
+        "released": "22,095.96",
+        "circulating": "13,191,287.74",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1319128774",
+        "ofSupply": "62.18%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 70,
+        "released": "22,095.96",
+        "circulating": "13,213,383.7",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1321338370",
+        "ofSupply": "62.29%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 71,
+        "released": "22,095.96",
+        "circulating": "13,235,479.66",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1323547966",
+        "ofSupply": "62.39%",
+        "from": [
+          "Treasury"
+        ]
+      },
+      {
+        "month": 72,
+        "released": "22,095.96",
+        "circulating": "13,257,575.62",
+        "releasedUnits": "2209596",
+        "circulatingUnits": "1325757562",
+        "ofSupply": "62.49%",
+        "from": [
+          "Treasury"
+        ]
+      }
+    ]
+  },
+  "notes": [
+    "Ecosystem and Partners are not in the table, because their amount or vesting could not be read"
+  ],
+  "notice": "This report is an input to a review before the token is deployed: not financial, legal or investment advice and not a guarantee that the plan is sound.",
+  "result": {
+    "pass": false,
+    "failOn": "error",
+    "text": "FAIL - 11 findings at or above error (11 error, 9 warning, 2 info)"
+  }
+}

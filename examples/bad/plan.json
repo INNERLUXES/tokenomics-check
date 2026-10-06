@@ -1,0 +1,78 @@
+{
+  "name": "Quickfire Example",
+  "symbol": "QFX",
+  "decimals": 2,
+  "chain": "evm",
+  "maxSupply": "21212121",
+  "totalSupply": "25000000",
+  "mintable": true,
+  "burnable": false,
+  "tradingAtLaunch": true,
+  "notes": "A made-up plan for the examples of tokenomics-check, with a finding of nearly every check.",
+  "allocations": [
+    {
+      "name": "Team",
+      "kind": "team",
+      "percent": 20,
+      "vesting": { "launchPercent": 10, "linearMonths": 6 }
+    },
+    {
+      "name": "Advisors",
+      "kind": "advisors",
+      "percent": 5,
+      "vesting": { "cliffMonths": 9, "durationMonths": 6 }
+    },
+    {
+      "name": "Seed investors",
+      "kind": "investors",
+      "percent": 15,
+      "vesting": { "cliffMonths": 12, "linearMonths": 0 }
+    },
+    {
+      "name": "Treasury",
+      "kind": "treasury",
+      "percent": 7.5,
+      "vesting": { "linearMonths": 72 }
+    },
+    {
+      "name": "Ecosystem",
+      "kind": "ecosystem",
+      "amount": "2000000.125",
+      "vesting": { "launchPercent": 150, "linearMonths": 24 }
+    },
+    {
+      "name": "Liquidity",
+      "kind": "liquidity",
+      "amount": "0",
+      "vesting": { "launchPercent": 100 }
+    },
+    {
+      "name": "Public sale",
+      "kind": "public-sale",
+      "percent": 10,
+      "vesting": {
+        "schedule": [
+          { "month": 1, "percent": 50 },
+          { "month": 2, "percent": 60 }
+        ]
+      }
+    },
+    {
+      "name": "Marketing",
+      "kind": "marketing",
+      "percent": 5,
+      "vesting": { "launchPercent": 20 }
+    },
+    {
+      "name": "TEAM",
+      "kind": "airdrop",
+      "percent": 3,
+      "vesting": { "launchPercent": 100, "cliff": 3 }
+    },
+    {
+      "name": "Partners",
+      "kind": "other",
+      "percent": 2
+    }
+  ]
+}
