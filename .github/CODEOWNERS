@@ -1,0 +1,16 @@
+# Every change is reviewed by a maintainer.
+* @innerluxesdev
+
+# The JSON reader, the reading of the file, the plan reader, the amounts, the schedules, the checks, the points of the
+# public pages, the rules and the output decide every result and what is read from the disk; changes need extra care.
+/src/json.js @innerluxesdev
+/src/files.js @innerluxesdev
+/src/plan.js @innerluxesdev
+/src/amounts.js @innerluxesdev
+/src/schedule.js @innerluxesdev
+/src/analyze.js @innerluxesdev
+/src/data.js @innerluxesdev
+/src/rules.js @innerluxesdev
+/src/check.js @innerluxesdev
+/src/report.js @innerluxesdev
+/research/ @innerluxesdev
