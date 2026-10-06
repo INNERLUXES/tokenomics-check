@@ -1,0 +1,51 @@
+{
+  "name": "tokenomics-check",
+  "version": "1.0.0",
+  "description": "Tokenomics check: reads the token plan of a new cryptocurrency or token as JSON (name, symbol, decimals, supply, mint and burn flags, and the buckets of team, investors, advisors, treasury, community, liquidity, public sale and ecosystem with their vesting), fetches nothing and runs nothing, and lists the problems to fix before the token is deployed with file and line: buckets that do not add up to the supply, percents out of range, decimals and amounts the chain cannot hold, a maximum supply that nothing enforces, insider buckets released at launch or with no cliff, vesting that is too short or too long, schedules that release more than a bucket or never finish, months that release a large share of the circulating supply and trading with no liquidity at launch, with a month-by-month release and circulating supply table. Text, markdown, JSON and SARIF output, exit codes for a pipeline, no dependencies.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "tokenomics-check": "bin/tokenomics-check.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "examples",
+    "research",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "test:coverage": "node --test --experimental-test-coverage \"test/*.test.js\"",
+    "check": "node tools/check.mjs",
+    "example": "node tools/example.mjs"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "tokenomics",
+    "token",
+    "vesting",
+    "erc20",
+    "erc-20",
+    "spl-token",
+    "token-supply",
+    "static-analysis",
+    "sarif",
+    "cli"
+  ],
+  "author": "INNERLUXES <info@innerluxes.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INNERLUXES/tokenomics-check.git"
+  },
+  "homepage": "https://innerluxes.dev/blockchain/cryptocurrency"
+}
